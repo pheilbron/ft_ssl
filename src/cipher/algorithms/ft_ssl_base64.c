@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 14:36:28 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/09 17:29:21 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,19 @@
 #define SHIFT_2 12
 #define SHIFT_3 6
 
-#define MASK_1 (0x3f << S1)
-#define MASK_2 (0x3f << S2)
-#define MASK_3 (0x3f << S3)
+#define MASK_1 (0x3f << SHIFT_1)
+#define MASK_2 (0x3f << SHIFT_2)
+#define MASK_3 (0x3f << SHIFT_3)
 #define MASK_4 0x3f
 
-static char	base64(uint8_t c)
+#define D_SHIFT_1 16
+#define D_SHIFT_2 8
+
+#define D_MASK_1 0xff0000
+#define D_MASK_2 0xff00
+#define D_MASK_3 0xff
+
+static char	char_to_base64(uint8_t c)
 {
 	if (c < 26)
 		return (c + 'A');
@@ -38,10 +45,26 @@ static char	base64(uint8_t c)
 	return (0);
 }
 
-static void	set_block(t_dstring *encr_data, char raw_data[48], int len)
+static char	base64_to_char(uint8_t c)
 {
+	if (c >= 'A' && c <= 'Z')
+		return (c - 'A');
+	if (c >= 'a' && c <= 'z')
+		return (c - 'a' + 26);
+	if (c >= '0' && c <= '9')
+		return (c - '0' + 52);
+	if (c == '+')
+		return (62);
+	if (c == '\\')
+		return (63);
+	return (0);
+}
+
+static void	encrypt_block(t_dstring *data_out, char *raw_data, int len)
+{
+	uint32_t	trio;
 	int			i;
-	uint64_t	trio;
+	int			j;
 
 	i = 0;
 	while (i < len)
@@ -53,29 +76,65 @@ static void	set_block(t_dstring *encr_data, char raw_data[48], int len)
 			trio = (trio << 8) + (i + j < len ? raw_data[i + j] : 0);
 			j++;
 		}
-		ft_dstr_addf(encr_data, "%c%c%c%c", base64((trio & MASK_1) >> SHIFT_1),
-				base64((trio & MASK_2) >> SHIFT_2),
-				i + 1 < len ? base64((trio & MASK_3) >> SHIFT_3) : '=',
-				i + 2 < len ? base64(trio & MASK_4) : '=');
+		ft_dstr_addf(data_out, "%c%c%c%c",
+				char_to_base64((trio & MASK_1) >> SHIFT_1),
+				char_to_base64((trio & MASK_2) >> SHIFT_2),
+				i + 1 < len ? char_to_base64((trio & MASK_3) >> SHIFT_3) : '=',
+				i + 2 < len ? char_to_base64(trio & MASK_4) : '=');
 		i += 3;
 	}
-	ft_dstr_add(encr_data, "\n");
+	ft_dstr_add(data_out, "\n");
+}
+
+static void	decrypt_data(t_dstring *data_out, char *raw_data, int len)
+{
+	uint32_t	trio;
+	int			i;
+	int			j;
+
+	i = 0;
+	while (i < len)
+	{
+		trio = 0;
+		j = 0;
+		while (i < len && j < 4)
+		{
+			while (!base64_to_char(raw_data[i]))
+				i++;
+			trio = (trio << 6) + (i < len ? raw_data[i] : 0);
+			j++;
+			i++;
+		}
+		ft_dstr_addf(data_out, "%c%c%c",
+				j > 0 ? base64_to_char((trio & D_MASK1) >> D_SHIFT_1) : '\0',
+				j > 1 ? base64_to_char((trio & D_MASK2) >> D_SHIFT_2) : '\0',
+				j > 2 ? base64_to_char((trio & D_MASK3) >> D_SHIFT_3) : '\0');
+	}
 }
 
 char		*ft_ssl_base64(t_ssl_file *file)
 {
-	t_dstring	*encr_data;
-	char		raw_data[48];
-	int			size;
+	t_dstring	*data_out;
+	char		*raw_data;
+	int			block_size;
+	int			read_size;
 
-	if (!(encr_data = ft_dstr_init()))
+	if (!(data_out = ft_dstr_init()))
 		return (NULL);
-	while ((size = ft_ssl_read(file->fd, raw_data, 48)))
-		set_block(encr_data, raw_data, size);
+	block_size = (file->flag & _D) == _D ? 65 : 48;
+	if (!(data_int = malloc(sizeof(*raw_data) * (1 + block_size))))
+		return (NULL);
+	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))
+	{
+		if (block_size == 48)
+			encrypt_block(data_out, raw_data, read_size);
+		else
+			decrypt_block(data_out, raw_data, read_size);
+	}
 	if (size < 0)
 	{
 		ft_ssl_new_error(&(file->e), SYS_ERROR, NULL);
 		return ((char *)print_fatal_error(file));
 	}
-	return (ft_dstr_release(chunk.encr_data));
+	return (ft_dstr_release(data_out));
 }
