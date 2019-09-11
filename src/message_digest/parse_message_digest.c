@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 08:41:55 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/10 13:52:21 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ static int	parse_md_string(t_ssl_context *c, char **data, int len, int *i)
 	file->flag = (c->options & ~_P) | _S;
 	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
-	if ((*i < len && ft_strcmp("-s", data[*i]) != 0) || *i >= len)
+	if ((*i < len && ft_strcmp("-s", data[*i]) != 0 &&
+				ft_strcmp("--string", data[*i]) != 0) || *i >= len)
 		c->options &= ~_S;
 	else if (*i < len)
 		(*i)++;
@@ -88,6 +89,9 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 	while (*i < len && data[*i][0] == '-')
 	{
 		data_i = 1;
+		if (data[*i][data_i] && data[*i][data_i] == '-')
+			if (set_ssl_long_option(c, data[*i] + ++data_i) < 0)
+				return (c->e.no);
 		while (data[*i][data_i])
 			if (set_ssl_option(chk, data[*i][data_i++], e) < 0)
 				return (c->e.no);

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 09:48:51 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/02 10:12:15 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/10 13:45:20 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 
 # define INV_COMMAND -1
 # define INV_OPTION -2
-# define INV_FILE -3
-# define DIRECTORY -4
-# define MISSING_ARG -5
-# define SYS_ERROR -6
+# define INV_LONG_OPTION -3
+# define INV_FILE -4
+# define DIRECTORY -5
+# define MISSING_ARG -6
+# define SYS_ERROR -7
 
 # define PARSE_ERROR -1
 # define NO_DATA_MALLOC -2

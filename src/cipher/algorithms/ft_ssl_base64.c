@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 17:29:21 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/10 13:47:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ char		*ft_ssl_base64(t_ssl_file *file)
 	if (!(data_out = ft_dstr_init()))
 		return (NULL);
 	block_size = (file->flag & _D) == _D ? 65 : 48;
-	if (!(data_int = malloc(sizeof(*raw_data) * (1 + block_size))))
+	if (!(data_in = malloc(sizeof(*raw_data) * (1 + block_size))))
 		return (NULL);
 	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))
 	{

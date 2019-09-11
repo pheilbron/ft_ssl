@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 08:44:11 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/10 13:43:24 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct	s_ssl_option
 	char						op;
 	enum e_ssl_algorithm_type	algorithm_type;
 	uint16_t					flag;
+	char						*long_op;
 }				t_ssl_option;
 
 extern t_ssl_option	g_options_tab[];

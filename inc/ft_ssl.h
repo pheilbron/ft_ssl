@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 08:04:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/10 15:01:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct	s_ssl_algorithm
 	enum e_ssl_algorithm_type	type;
 	void						(*f)();
 	void						(*process)();
+	void						(*print)();
 }				t_ssl_algorithm;
 
 typedef struct	s_ssl_context
