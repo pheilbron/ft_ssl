@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 17:06:19 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 17:56:40 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/11 18:46:04 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ uint64_t	rot_r(uint64_t x, uint8_t shift, uint8_t data_size)
 	return (x);
 }
 
-void		set_4b_file_hash(uint32_t *hash, uint32_t **file_hash, uint8_t len)
+void		u32_be_to_u32_be(uint32_t *hash, uint32_t **file_hash, uint8_t len)
 {
 	uint8_t	i;
 
@@ -38,7 +38,22 @@ void		set_4b_file_hash(uint32_t *hash, uint32_t **file_hash, uint8_t len)
 	}
 }
 
-void		set_8b_to_4b_file_hash(uint64_t *hash, uint32_t **file_hash, uint8_t len)
+void		u32_le_to_u32_be(uint32_t *hash, uint32_t **file_hash, uint8_t len)
+{
+	uint8_t	i;
+
+	i = 0;
+	while (i < len)
+	{
+		(*file_hash)[i] = (((hash[i] & BYTE_1_MASK) >> 24) |
+				((hash[i] & BYTE_2_MASK) >> 8) |
+				((hash[i] & BYTE_3_MASK) << 8) |
+				((hash[i] & BYTE_4_MASK) << 24));
+		i++;
+	}
+}
+
+void		u64_be_to_u32_be(uint64_t *hash, uint32_t **file_hash, uint8_t len)
 {
 	uint8_t	i;
 

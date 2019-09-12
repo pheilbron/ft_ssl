@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 16:31:24 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/11 18:43:20 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ static void		set_block(t_md5_chunk *chunk)
 	chunk->hash[D] += chunk->temp[D];
 }
 
-t_ssl_hash		*ft_ssl_md5(t_ssl_file *file)
+t_ssl_hash		*ft_ssl_md5_file(t_ssl_file *file)
 {
 	t_md5_chunk	chunk;
 	int			pass;
@@ -109,7 +109,26 @@ t_ssl_hash		*ft_ssl_md5(t_ssl_file *file)
 		set_block(&chunk);
 	if (!pass)
 		return (NULL);
-	ret = u32_le_to_u32_be(chunk.hash, 4);
+	ret = u32_le_to_u32_be_hash(chunk.hash, 4);
 	ft_ssl_free_u32_md_block(&(chunk.block));
 	return (ret);
+}
+
+void			ft_ssl_md5_buffer(char *data, uint32_t **hash)
+{
+	t_md5_chunk	chunk;
+
+	pad_u32_buffer_data(data, chunk.data, LITTLE_ENDIAN);
+	chunk.pos = 0;
+	chunk.hash[A] = 0x67452301;
+	chunk.hash[B] = 0xefcdab89;
+	chunk.hash[C] = 0x98badcfe;
+	chunk.hash[D] = 0x10325476;
+	while (chunk.pos < chunk.len)
+	{
+		set_block(&chunk);
+		chunk.pos += 16;
+	}
+	u32_le_to_u32_be(chunk.hash, hash, 4);
+	free(chunk.data);
 }

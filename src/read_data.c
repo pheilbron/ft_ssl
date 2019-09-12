@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 10:51:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/11 18:38:01 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_ssl_read(int fd, char *buf, int size)
 
 	total = 0;
 	ret = 1;
-	if (h.len > 0)
+	if ((h.len - h.i) > 0)
 	{
 		ft_memcpy(buf, h.buf + h.i, (total = ft_min(h.len - h.i, size)));
 		h.i = (total > size ? 0 : h.i + total);

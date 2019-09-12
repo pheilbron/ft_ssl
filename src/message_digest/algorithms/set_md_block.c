@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 14:33:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 16:31:18 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/11 18:25:34 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	ft_ssl_init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	block->padding = -1 * bit_len_size;
 	return (1);
 }
-
-static int	ft_ssl_read(int fd, char *buf, int size);
 
 int			ft_ssl_set_u32_md_block(t_u32_md_block *out, t_ssl_file *in,
 		uint8_t type)
