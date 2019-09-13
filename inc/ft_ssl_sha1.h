@@ -23,14 +23,10 @@
 
 typedef struct	s_sha1_chunk
 {
-	uint32_t	*data;
-	uint32_t	len;
-	uint32_t	pos;
+	t_u32_md_block	block;
 	uint32_t	s[80];
 	uint32_t	hash[5];
 	uint32_t	temp[5];
 }				t_sha1_chunk;
-
-void	ft_ssl_sha1(char *data, uint32_t **file_hash);
 
 #endif

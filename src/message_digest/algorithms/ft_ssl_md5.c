@@ -17,7 +17,6 @@
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_md5.h"
 #include "ft_string.h"
-#include "ft_printf.h"
 
 uint32_t	g_constant_tab[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af,
@@ -93,32 +92,31 @@ static void		set_block(t_md5_chunk *chunk)
 	chunk->hash[D] += chunk->temp[D];
 }
 
-t_ssl_hash		*ft_ssl_md5_file(t_ssl_file *file)
+int				ft_ssl_md5_file(t_ssl_file *file, char **hash)
 {
 	t_md5_chunk	chunk;
 	int			pass;
-	t_ssl_hash	*ret;
 
 	if (!init_u32_md_block(&(chunk.block), 16, 64))
-		return (NULL);
+		return (0);
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
-	while ((pass = ft_ssl_set_u32_md_block(&(chunk.block), file, LITTLE_END)))
+	while ((pass = set_u32_md_block(&(chunk.block), file, LITTLE_ENDIAN)))
 		set_block(&chunk);
 	if (!pass)
-		return (NULL);
-	ret = u32_le_to_u32_be_hash(chunk.hash, 4);
-	ft_ssl_free_u32_md_block(&(chunk.block));
-	return (ret);
+		return (free_u32_md_block(&(chunk.block))); 
+	if ((*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
+		u32_le_to_u8(chunk.hash, hash, chunk.len);
+	return (free_u32_md_block(&(chunk.block)));
 }
 
-void			ft_ssl_md5_buffer(char *data, uint32_t **hash)
+void			ft_ssl_md5_buffer(char *data, char **hash)
 {
-	t_md5_chunk	chunk;
+	t_md5_buffer	chunk;
 
-	pad_u32_buffer_data(data, chunk.data, LITTLE_ENDIAN);
+	chunk.len = md_pad_u8_to_u32(data, chunk.data, LITTLE_ENDIAN);
 	chunk.pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
@@ -129,6 +127,8 @@ void			ft_ssl_md5_buffer(char *data, uint32_t **hash)
 		set_block(&chunk);
 		chunk.pos += 16;
 	}
-	u32_le_to_u32_be(chunk.hash, hash, 4);
+	if ((*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
+		u32_le_to_u8(chunk.hash, hash, chunk.len);
 	free(chunk.data);
+	return (1);
 }

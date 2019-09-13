@@ -1,19 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   set_md_block.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/05 14:33:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/11 18:25:34 by pheilbro         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "ft_ssl_md_block.h"
 
-
-int	ft_ssl_init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
+int	init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 		short bit_len_size)
 {
 	short	i;
@@ -32,8 +20,7 @@ int	ft_ssl_init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	return (1);
 }
 
-int			ft_ssl_set_u32_md_block(t_u32_md_block *out, t_ssl_file *in,
-		uint8_t type)
+int	set_u32_md_block(t_u32_md_block *out, t_ssl_file *in, uint8_t type)
 {
 	char	data[out->size * 4];
 	int		size;
@@ -56,4 +43,12 @@ int			ft_ssl_set_u32_md_block(t_u32_md_block *out, t_ssl_file *in,
 	if (out->padding >= 0)
 		//set padding and len (if possible)
 	return (out->padding);
+}
+
+int	free_u32_md_block(t_u32_md_block *block)
+{
+	if (block->data)
+		free(block->data);
+	if (block->bit_len)
+		free(block->bit_len);
 }

@@ -18,14 +18,18 @@
 
 t_ssl_algorithm	g_algo_tab[] = 
 {
-	{md5, "md5", message_digest, &ft_ssl_md5, &process_message_digest},
-	{sha1, "sha1", message_digest, &ft_ssl_sha1, &process_message_digest},
-	{sha224, "sha224", message_digest, &ft_ssl_sha224, &process_message_digest},
-	{sha256, "sha256", message_digest, &ft_ssl_sha256, &process_message_digest},
-	{sha384, "sha384", message_digest, &ft_ssl_sha384, &process_message_digest},
-	{sha512, "sha512", message_digest, &ft_ssl_sha512, &process_message_digest},
-//	{base64, "base64", cipher, &ft_ssl_base64, &process_cipher},
-	{0, NULL, 0, NULL, NULL}
+	{MD | MD5, "md5", &ft_ssl_md5, &process_message_digest},
+	{MD | SHA1, "sha1", &ft_ssl_sha1, &process_message_digest},
+	{MD | SHA224, "sha224", &ft_ssl_sha224, &process_message_digest},
+	{MD | SHA256, "sha256", &ft_ssl_sha256, &process_message_digest},
+	{MD | SHA384, "sha384", &ft_ssl_sha384, &process_message_digest},
+	{MD | SHA512, "sha512", &ft_ssl_sha512, &process_message_digest},
+	{MD | SHA512_224, "sha512/224", &ft_ssl_sha512_224,
+		&process_message_digest},
+	{MD | SHA512_256, "sha512/256", &ft_ssl_sha512_256,
+		&process_message_digest},
+//	{base64, "base64", &ft_ssl_base64, &process_cipher},
+	{0, NULL, NULL, NULL}
 };
 
 static int	parse_ssl_command(t_ssl_context *c, char *command)
@@ -38,7 +42,6 @@ static int	parse_ssl_command(t_ssl_context *c, char *command)
 		if (ft_strcmp(command, g_algo_tab[i].name) == 0)
 		{
 			c->algorithm.name = command;
-			c->algorithm.algorithm = g_algo_tab[i].algorithm;
 			c->algorithm.type = g_algo_tab[i].type;
 			c->algorithm.f = g_algo_tab[i].f;
 			c->algorithm.process = g_algo_tab[i].process;

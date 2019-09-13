@@ -21,17 +21,15 @@ int	ft_ssl_free_error(t_error *e)
 	error_no = e->no;
 	if (e->no == INV_COMMAND)
 		free(e->data);
-//	free(e);
 	return (error_no);
 }
 
-int	ft_ssl_free_hash(t_ssl_hash *hash)
+int	ft_ssl_free_file(t_ssl_file *file)
 {
-	int	error_no;
-
-	error_no = hash->e.no;
-	free(data);
-	if (errno < 0)
-		free(hash->e.data);
-	return (errno);
+	if (file->fd >= 0)
+		free(file->hash);
+	if (file->data && file->fd != PARSE_ERROR && ((file->flag & _S) != _S))
+		free(file->data);
+	free(file);
+	return (1);
 }

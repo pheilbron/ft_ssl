@@ -15,9 +15,6 @@
 #include "ft_ssl_sha256.h"
 #include "ft_string.h"
 
-#define ONLOAD 1
-#define OFFLOAD 2
-
 uint32_t g_sha256_tab[] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
 	0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -30,100 +27,40 @@ uint32_t g_sha256_tab[] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f,
 	0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
-static uint32_t	pad_data(char *data, t_sha256_chunk *chunk)
-{
-	uint64_t	len;
-	uint64_t	i;
-
-	len = ft_strlen(data);
-	i = (len * 8) + 65;
-	chunk->len = (i + (512 - (i % 512))) / 32;
-	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
-	{
-		i = ft_ssl_prep_4b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += ULONG_LEADING_ONE >> ((len % 4) * 8);
-		while (i < chunk->len - 2)
-			chunk->data[i++] = 0;
-		chunk->data[i++] = (uint32_t)(FIRST_HALF(len * 8));
-		chunk->data[i] = (uint32_t)(SECOND_HALF(len * 8));
-	}
-	return (chunk->len);
-}
-
-static void		init_message_schedule(t_sha256_chunk *chunk)
-{
-	uint8_t	i;
-
-	i = 0;
-	while (i < 16)
-	{
-		chunk->s[i] = chunk->data[chunk->pos + i];
-		i++;
-	}
-	while (i < 64)
-	{
-		chunk->s[i] = message_schedule_sum(chunk->s, i, S1) +
-			chunk->s[i - 7] + message_schedule_sum(chunk->s, i, S0) +
-			chunk->s[i - 16];
-		i++;
-	}
-}
-
-static void		compress(t_sha256_chunk *chunk)
-{
-	uint8_t		i;
-	uint32_t	temp1;
-	uint32_t	temp2;
-
-	i = 0;
-	while (i < 64)
-	{
-		temp1 = compression_sum(chunk, S1) + choice(chunk) + chunk->temp[H] +
-			chunk->s[i] + g_sha256_tab[i];
-		temp2 = compression_sum(chunk, S0) + majority(chunk);
-		chunk->temp[H] = chunk->temp[G];
-		chunk->temp[G] = chunk->temp[F];
-		chunk->temp[F] = chunk->temp[E];
-		chunk->temp[E] = chunk->temp[D] + temp1;
-		chunk->temp[D] = chunk->temp[C];
-		chunk->temp[C] = chunk->temp[B];
-		chunk->temp[B] = chunk->temp[A];
-		chunk->temp[A] = temp1 + temp2;
-		i++;
-	}
-}
-
-static void		update_message_schedule(t_sha256_chunk *chunk, uint8_t type)
-{
-	if (type == ONLOAD)
-	{
-		chunk->temp[A] = chunk->hash[A];
-		chunk->temp[B] = chunk->hash[B];
-		chunk->temp[C] = chunk->hash[C];
-		chunk->temp[D] = chunk->hash[D];
-		chunk->temp[E] = chunk->hash[E];
-		chunk->temp[F] = chunk->hash[F];
-		chunk->temp[G] = chunk->hash[G];
-		chunk->temp[H] = chunk->hash[H];
-	}
-	else if (type == OFFLOAD)
-	{
-		chunk->hash[A] += chunk->temp[A];
-		chunk->hash[B] += chunk->temp[B];
-		chunk->hash[C] += chunk->temp[C];
-		chunk->hash[D] += chunk->temp[D];
-		chunk->hash[E] += chunk->temp[E];
-		chunk->hash[F] += chunk->temp[F];
-		chunk->hash[G] += chunk->temp[G];
-		chunk->hash[H] += chunk->temp[H];
-	}
-}
-
-void			ft_ssl_sha256(char *data, uint32_t **file_hash)
+int	ft_ssl_sha256_file(t_ssl_file *file, char **hash)
 {
 	t_sha256_chunk	chunk;
+	int				pass;
 
-	pad_data(data, &chunk);
+	if (!init_u32_md_block(&(chunk.block), 16, 64))
+		return (0);
+	chunk.hash[A] = 0x6a09e667;
+	chunk.hash[B] = 0xbb67ae85;
+	chunk.hash[C] = 0x3c6ef372;
+	chunk.hash[D] = 0xa54ff53a;
+	chunk.hash[E] = 0x510e527f;
+	chunk.hash[F] = 0x9b05688c;
+	chunk.hash[G] = 0x1f83d9ab;
+	chunk.hash[H] = 0x5be0cd19;
+	while ((pass = set_u32_md_block(&(chunk.block), file, BIG_ENDIAN)))
+	{
+		init_sha256_block_message_schedule(&chunk);
+		update_sha256_message_schedule(&chunk, ONLOAD);
+		compress_sha256_chunk(&chunk);
+		update_sha256_message_schedule(&chunk, OFFLOAD);
+	}
+	if (!pass)
+		return (free_u32_md_block(&(chunk.block)));
+	if ((*hash = malloc(sizeof(**hash) * (8 * 4 + 1))))
+		u32_be_to_u8(chunk.hash, hash, chunk.len);
+	return (free_u32_md_block(&(chunk.block)));
+}
+
+int	ft_ssl_sha256_buffer(char *data, char **hash)
+{
+	t_sha256_buffer	chunk;
+
+	chunk.len = md_pad_u8_to_u32(data, chunk.data, BIG_ENDIAN);
 	chunk.pos = 0;
 	chunk.hash[A] = 0x6a09e667;
 	chunk.hash[B] = 0xbb67ae85;
@@ -135,12 +72,13 @@ void			ft_ssl_sha256(char *data, uint32_t **file_hash)
 	chunk.hash[H] = 0x5be0cd19;
 	while (chunk.pos < chunk.len)
 	{
-		init_message_schedule(&chunk);
-		update_message_schedule(&chunk, ONLOAD);
-		compress(&chunk);
-		update_message_schedule(&chunk, OFFLOAD);
-		chunk.pos += 16;
+		init_sha256_block_message_schedule(&chunk);
+		update_sha256_message_schedule(&chunk, ONLOAD);
+		compress_sha256_chunk(&chunk);
+		update_sha256_message_schedule(&chunk, OFFLOAD);
 	}
-	set_4b_file_hash(chunk.hash, file_hash, 8);
+	if ((*hash = malloc(sizeof(**hash) * (8 * 4 + 1))))
+		u32_be_to_u8(chunk.hash, hash, chunk.len);
 	free(chunk.data);
+	return (1);
 }

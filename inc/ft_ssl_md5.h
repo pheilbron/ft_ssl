@@ -22,11 +22,19 @@
 
 typedef struct	s_md5_chunk
 {
-	t_u32_md_block	block;
 	uint32_t		hash[4];
 	uint32_t		temp[4];
 }				t_md5_chunk;
 
-void			ft_ssl_md5(char *data, uint32_t (*hash)[4]);
+typedef struct	s_md5_buffer
+{
+	uint32_t	data;
+	uint32_t	pos;
+	uint32_t	len;
+}				t_md5_buffer;
+
+typedef struct	s_md5_context
+{
+	t_md5_chunk	chunk;
 
 #endif

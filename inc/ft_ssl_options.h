@@ -38,12 +38,26 @@
 # define _O 128
 # define _V 256
 
+# define MD 1
+# define CIPHER 2
+# define STANDARD 3
+
+# define MD5 1 << 2
+# define SHA1 2 << 2
+# define SHA224 3 << 2
+# define SHA256 4 << 2
+# define SHA384 5 << 2
+# define SHA512 6 << 2
+
+# define BASE64 1 << 2
+# define DES 2 << 2
+
 typedef struct	s_ssl_option
 {
-	char						op;
-	enum e_ssl_algorithm_type	algorithm_type;
-	uint16_t					flag;
-	char						*long_op;
+	char					op;
+	t_ssl_algorithm_type	type;
+	uint16_t				flag;
+	char					*long_op;
 }				t_ssl_option;
 
 extern t_ssl_option	g_options_tab[];

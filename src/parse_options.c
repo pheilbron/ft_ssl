@@ -16,20 +16,20 @@
 
 t_ssl_option		g_options_tab[] =
 {
-    {'a', cipher, _A, "base64"},
-    {'d', cipher, _D, "decrypt"},
-    {'e', cipher, _E, "encrypt"},
-    {'i', cipher, _I, "input-file"},
-    {'k', cipher, _K, "key"},
-    {'o', cipher, _O, "output-file"},
-    {'p', message_digest, _P, "stdin"},
-    {'p', cipher, _P, "password"},
-    {'q', message_digest, _Q, "print-quiet"},
-    {'r', message_digest, _R, "print-reverse"},
-    {'s', message_digest, _S, "string"},
-    {'s', cipher, _S, "salt"},
-    {'v', cipher, _V, "init-vector"},
-    {0, 0, 0}
+    {'a', CIPHER, _A, "base64"},
+    {'d', CIPHER, _D, "decrypt"},
+    {'e', CIPHER, _E, "encrypt"},
+    {'i', CIPHER, _I, "input-file"},
+    {'k', CIPHER, _K, "key"},
+    {'o', CIPHER, _O, "output-file"},
+    {'p', MD, _P, "stdin"},
+    {'p', CIPHER, _P, "password"},
+    {'q', MD, _Q, "print-quiet"},
+    {'r', MD, _R, "print-reverse"},
+    {'s', MD, _S, "string"},
+    {'s', CIPHER, _S, "salt"},
+    {'v', CIPHER, _V, "init-vector"},
+    {0, 0, 0, 0}
 };
 
 int	set_ssl_option(t_ssl_context *c, char op)
@@ -39,7 +39,7 @@ int	set_ssl_option(t_ssl_context *c, char op)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].type == c->algorithm.type &&
+		if (g_options_tab[i].type.family == c->algorithm.type.family &&
 				g_options_tab[i].op == op)
 		{
 			chk->options |= g_options_tab[i].flag;
@@ -58,7 +58,7 @@ int	set_ssl_long_option(t_ssl_context *c, char *option)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].type == c->algorithm.type &&
+		if (g_options_tab[i].type.family == c->algorithm.type.family &&
 				ft_strcmp(g_options_tab[i].long_op, option) == 0)
 		{
 			chk->options |= g_options_tab[i].flag;

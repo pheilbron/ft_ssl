@@ -18,22 +18,20 @@
 # include "ft_queue.h"
 # include "ft_dstring.h"
 
-enum	e_ssl_algorithm
-{
-	md5,
-	sha1,
-	sha224,
-	sha256,
-	sha384,
-	sha512
-};
+# define LITTLE_ENDIAN 1
+# define LE 1
+# define BIG_ENDIAN 2
+# define BE 2
 
-enum	e_ssl_algorithm_type
+typedef	union	u_ssl_algorithm_type
 {
-	standard = 1,
-	message_digest,
-	cipher
-};
+	uint16_t	reference;
+	struct
+	{
+		uint16_t	family : 2;
+		uint16_t	type : 14;
+	}	algorithm;
+}				t_ssl_algorithm_type;
 
 typedef struct	s_ssl_file
 {
@@ -43,22 +41,13 @@ typedef struct	s_ssl_file
 	t_error		e;
 }				t_ssl_file;
 
-typedef struct	s_ssl_encrypted_data
-{
-	uint32_t	*data;
-	uint8_t		len;
-	char		*file_ref;
-	t_error		e;
-}				t_ssl_encrypted_data;
-
 typedef struct	s_ssl_algorithm
 {
-	enum e_ssl_algorithm		algorithm;
-	char						*name;
-	enum e_ssl_algorithm_type	type;
-	void						(*f)();
-	void						(*process)();
-	void						(*print)();
+	t_ssl_algorithm_type	type;
+	char					*name;
+	void					(*f)();
+	void					(*process)();
+	void					(*print)();
 }				t_ssl_algorithm;
 
 typedef struct	s_ssl_context
@@ -71,9 +60,9 @@ typedef struct	s_ssl_context
 
 extern t_ssl_algorithm	g_algo_tab[];
 
-t_dstring		*get_ssl_options(t_dstring *s, enum e_ssl_algorithm_type type);
-char			*get_ssl_command(enum e_ssl_algorithm type);
-t_dstring		*get_ssl_commands(t_dstring *s, enum e_ssl_algorithm_type type);
+t_dstring		*get_ssl_options(t_dstring *s, t_ssl_algorithm_type type);
+char			*get_ssl_command(t_ssl_algorithm_type type);
+t_dstring		*get_ssl_commands(t_dstring *s, t_ssl_algorithm_type type);
 
 int				parse_input(t_ssl_context *c, char **data, int len);
 int				set_ssl_options(t_ssl_context *c, char op);
@@ -81,17 +70,6 @@ void			parse_cipher(t_ssl_context *c, char **data, int len, int *i);
 void			parse_standard(t_ssl_context *c, char **data, int len, int *i);
 void			parse_message_digest(t_ssl_context *c, char **data, int len,
 		int *i);
-
-int				ft_ssl_prep_4b_little_end(uint32_t **prepped_data, char *data,
-		uint64_t len);
-int				ft_ssl_prep_4b_big_end(uint32_t **prepped_data, char *data,
-		uint64_t len);
-int				ft_ssl_prep_8b_big_end(uint64_t **prepped_data, char *data,
-		uint64_t len);
-uint32_t	u32_le_to_u32_be(uint32_t data);
-
-void			ft_ssl_process_and_print(t_ssl_checksum *chk);
-
 int				print_usage(t_ssl_context c);
 int				print_fatal_error(t_ssl_context c);
 void			print_non_fatal_error(t_ssl_hash *hash);

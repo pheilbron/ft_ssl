@@ -15,23 +15,21 @@
 
 # include <stdint.h>
 # include "ft_ssl.h"
-# include "ft_ssl_md5.h"
-# include "ft_ssl_sha1.h"
-# include "ft_ssl_sha256.h"
-# include "ft_ssl_sha512.h"
 
-#define ULONG_LEADING_ONE ((uint32_t)1 << 31)
-#define ULLONG_LEADING_ONE (uint64_t)1 << 63
-#define FIRST_HALF(x) x / ((uint64_t)1 << 32)
-#define SECOND_HALF(x) x % ((uint64_t)1 << 32)
+void	ft_ssl_md5_buffer(char *in, char **hash);
+void	ft_ssl_md5_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha1_buffer(char *data, char **hash);
+void	ft_ssl_sha1_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha224_buffer(char *data, char **hash);
+void	ft_ssl_sha224_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha256_buffer(char *data, char **hash);
+void	ft_ssl_sha256_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha384_buffer(char *data, char **hash);
+void	ft_ssl_sha384_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha512_buffer(char *data, char **hash);
+void	ft_ssl_sha512_file(t_ssl_file *file, char **hash);
 
-uint64_t	rot_l(uint64_t, uint8_t shift, uint8_t data_size);
-uint64_t	rot_r(uint64_t, uint8_t shift, uint8_t data_size);
-void		set_4b_file_hash(uint32_t *hash, uint32_t **file_hash, uint8_t len);
-void		set_8b_to_4b_file_hash(uint64_t *hash, uint32_t **file_hash,
-		uint8_t len);
-
-void		ft_ssl_md_print(char *algo_name, uint8_t algo_ops, uint8_t hash_len,
+void	ft_ssl_md_print(char *algo_name, uint8_t algo_ops, uint8_t hash_len,
 		t_ssl_file *file);
 
 #endif
