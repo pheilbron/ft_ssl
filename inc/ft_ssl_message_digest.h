@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:23:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 18:17:20 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 13:59:58 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ void	ft_ssl_sha384_buffer(char *data, char **hash);
 void	ft_ssl_sha384_file(t_ssl_file *file, char **hash);
 void	ft_ssl_sha512_buffer(char *data, char **hash);
 void	ft_ssl_sha512_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha512_224_buffer(char *data, char **hash);
+void	ft_ssl_sha512_224_file(t_ssl_file *file, char **hash);
+void	ft_ssl_sha512_256_buffer(char *data, char **hash);
+void	ft_ssl_sha512_256_file(t_ssl_file *file, char **hash);
 
 void	ft_ssl_md_print(char *algo_name, uint8_t algo_ops, uint8_t hash_len,
 		t_ssl_file *file);

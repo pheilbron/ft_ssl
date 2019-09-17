@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/07 14:18:21 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/09/17 14:04:42 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ MD			= parse_message_digest process_message_digest print_message_digest \
 			  algorithms/ft_ssl_sha384 \
 			  algorithms/ft_ssl_sha512 algorithms/ft_ssl_sha512_aux \
 			  algorithms/ft_ssl_sha512_224 algorithms/ft_ssl_sha512_256 \
-			  algorithms/ft_ssl_whirlpool \
+			  #algorithms/ft_ssl_whirlpool \#
 			  algorithms/ft_ssl_sha_utils
 CIPHER		= parse_cipher \
 			  algorithms/ft_ssl_base64 \

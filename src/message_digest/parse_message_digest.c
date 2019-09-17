@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/10 13:52:21 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 14:30:12 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	parse_md_stdin(t_ssl_context *c)
 	return (file->e.no);
 }
 
-static int		parse_md_file(t_ssl_context *c, char **data, int i)
+static int	parse_md_file(t_ssl_context *c, char **data, int i)
 {
 	t_ssl_file	*file;
 
@@ -53,7 +53,7 @@ static int		parse_md_file(t_ssl_context *c, char **data, int i)
 		ft_ssl_new_error(file->e, INV_FILE, data[i]);
 	else
 	{
-		file->file_name = data[i];
+		file->reference = data[i];
 		file->e.no = 1;
 	}
 	file->flag = c->options & ~_P & ~_S;
@@ -98,7 +98,7 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 		(*i)++;
 		if ((c->options & _S) == _S)
 		{
-			while (((c->options &_S) == _S) &&
+			while (((c->options & _S) == _S) &&
 					parse_md_string(c, data[i], len, &i) >= 0)
 				;
 			return (c->e.no = 1);
@@ -107,7 +107,7 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 	return (c->e.no = 1);
 }
 
-void			parse_message_digest(t_ssl_context *c, char **data, int len,
+void		parse_message_digest(t_ssl_context *c, char **data, int len,
 		int *i)
 {
 	if (len == 1)

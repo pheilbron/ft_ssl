@@ -6,20 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:26:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 17:58:48 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 13:54:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <limits.h>
 #include "ft_ssl.h"
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_sha512.h"
-#include "ft_string.h"
-
-#define ONLOAD 1
-#define OFFLOAD 2
-
-#define FIRST_LEN(x) (x / (ULLONG_MAX / 8))
+#include "ft_ssl_md_block.h"
 
 uint64_t g_sha512_tab[] = {0x428a2f98d728ae22, 0x7137449123ef65cd,
 	0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc, 0x3956c25bf348b538,
@@ -49,32 +43,14 @@ uint64_t g_sha512_tab[] = {0x428a2f98d728ae22, 0x7137449123ef65cd,
 	0x3c9ebe0a15c9bebc, 0x431d67c49c100d4c, 0x4cc5d4becb3e42b6,
 	0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817};
 
-static uint64_t	pad_data(char *data, t_sha512_chunk *chunk)
-{
-	uint64_t	len;
-	uint64_t	i;
-
-	len = ft_strlen(data);
-	i = (len * 8) + 129;
-	chunk->len = (i + (1024 - (i % 1024))) / 64;
-	if ((chunk->data = malloc(sizeof(*chunk->data) * chunk->len)))
-	{
-		i = ft_ssl_prep_8b_big_end(&(chunk->data), data, len);
-		chunk->data[i++] += ULLONG_LEADING_ONE >> ((len % 8) * 8);
-		while (i < chunk->len - 2)
-			chunk->data[i++] = 0;
-		chunk->data[i++] = FIRST_LEN(len) * 8;
-		chunk->data[i] = len * 8;
-	}
-	return (chunk->len);
-}
-
-void			ft_ssl_sha512(char *data, uint32_t **file_hash)
+void			ft_ssl_sha512_file(t_ssl_file *file, char **hash)
 {
 	t_sha512_chunk	chunk;
+	int				status;
 
-	pad_data(data, &chunk);
-	chunk.pos = 0;
+	if (!init_u64_md_block(&(chunk.block), 16, 128))
+		return (0);
+	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x6a09e667f3bcc908;
 	chunk.hash[B] = 0xbb67ae8584caa73b;
 	chunk.hash[C] = 0x3c6ef372fe94f82b;
@@ -83,14 +59,43 @@ void			ft_ssl_sha512(char *data, uint32_t **file_hash)
 	chunk.hash[F] = 0x9b05688c2b3e6c1f;
 	chunk.hash[G] = 0x1f83d9abfb41bd6b;
 	chunk.hash[H] = 0x5be0cd19137e2179;
-	while (chunk.pos < chunk.len)
+	while ((status = set_u64_md_block(&(chunk.block), file, BIG_ENDIAN)) > 0)
 	{
-		init_message_schedule(&chunk);
-		update_message_schedule(&chunk, ONLOAD);
-		compress(&chunk);
-		update_message_schedule(&chunk, OFFLOAD);
-		chunk.pos += 16;
+		init_sha512_block_message_schedule(&chunk);
+		update_sha512_message_schedule(&chunk, ONLOAD);
+		compress_sha512_chunk(&chunk);
+		update_sha512_message_schedule(&chunk, OFFLOAD);
 	}
-	set_8b_to_4b_file_hash(chunk.hash, file_hash, 8);
-	free(chunk.data);
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (8 * 8 + 1))))
+		u64_be_to_u8(chunk.hash, hash, 8);
+	return (free_u64_md_block(&(chunk.block)));
+}
+
+void			ft_ssl_sha512_buffer(char *data, char **hash)
+{
+	t_sha512_chunk	chunk;
+
+	if (!init_u64_md_block(&(chunk.block), 16, 128))
+		return (0);
+	chunk.buf_len = md_pad_u8_to_u64(data, chunk.block.data, BIG_ENDIAN);
+	chunk.buf_pos = 0;
+	chunk.hash[A] = 0x6a09e667f3bcc908;
+	chunk.hash[B] = 0xbb67ae8584caa73b;
+	chunk.hash[C] = 0x3c6ef372fe94f82b;
+	chunk.hash[D] = 0xa54ff53a5f1d36f1;
+	chunk.hash[E] = 0x510e527fade682d1;
+	chunk.hash[F] = 0x9b05688c2b3e6c1f;
+	chunk.hash[G] = 0x1f83d9abfb41bd6b;
+	chunk.hash[H] = 0x5be0cd19137e2179;
+	while (chunk.buf_pos < chunk.buf_len)
+	{
+		init_sha512_block_message_schedule(&chunk);
+		update_sha512_message_schedule(&chunk, ONLOAD);
+		compress_sha512_chunk(&chunk);
+		update_sha512_message_schedule(&chunk, OFFLOAD);
+		chunk.buf_pos += 16;
+	}
+	if ((*hash = malloc(sizeof(**hash) * (8 * 8 + 1))))
+		u64_be_to_u8(chunk.hash, hash, 8);
+	return (free_u64_md_block(&(chunk.block)));
 }

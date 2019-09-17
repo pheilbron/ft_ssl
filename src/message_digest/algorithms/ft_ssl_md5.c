@@ -6,17 +6,15 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/11 18:43:20 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 14:19:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
-#include <stdlib.h>
-#include <stddef.h>
 #include "ft_ssl.h"
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_md5.h"
-#include "ft_string.h"
+#include "ft_ssl_md_block.h"
 
 uint32_t	g_constant_tab[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501, 0x698098d8, 0x8b44f7af,
@@ -38,30 +36,31 @@ uint32_t	g_shift_tab[] = {
 
 static uint32_t	f(t_md5_chunk *ch, int i)
 {
-	uint32_t	F;
+	uint32_t	f_value;
 	uint32_t	g;
 
 	if (i >= 0 && i < 16)
 	{
-		F = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
+		f_value = (ch->temp[B] & ch->temp[C]) | (~(ch->temp[B]) & ch->temp[D]);
 		g = i;
 	}
 	else if (i > 15 && i < 32)
 	{
-		F = (ch->temp[B] & ch->temp[D]) | (ch->temp[C] & ~(ch->temp[D]));
+		f_value = (ch->temp[B] & ch->temp[D]) | (ch->temp[C] & ~(ch->temp[D]));
 		g = ((i * 5) + 1) % 16;
 	}
 	else if (i > 31 && i < 48)
 	{
-		F = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
+		f_value = (ch->temp[B] ^ ch->temp[C] ^ ch->temp[D]);
 		g = ((i * 3) + 5) % 16;
 	}
 	else
 	{
-		F = ch->temp[C] ^ (ch->temp[B] | ~(ch->temp[D]));
+		f_value = ch->temp[C] ^ (ch->temp[B] | ~(ch->temp[D]));
 		g = (i * 7) % 16;
 	}
-	return (F + ch->temp[A] + g_constant_tab[i] + ch->block->data[g]);
+	return (f_value + ch->temp[A] + g_constant_tab[i] +
+			ch->block.data[g + ch->buf_pos]);
 }
 
 static void		update_temp(t_md5_chunk *chunk, int i)
@@ -95,40 +94,40 @@ static void		set_block(t_md5_chunk *chunk)
 int				ft_ssl_md5_file(t_ssl_file *file, char **hash)
 {
 	t_md5_chunk	chunk;
-	int			pass;
+	int			status;
 
 	if (!init_u32_md_block(&(chunk.block), 16, 64))
 		return (0);
+	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
-	while ((pass = set_u32_md_block(&(chunk.block), file, LITTLE_ENDIAN)))
+	while ((status = set_u32_md_block(&(chunk.block), file, LITTLE_ENDIAN)) > 0)
 		set_block(&chunk);
-	if (!pass)
-		return (free_u32_md_block(&(chunk.block))); 
-	if ((*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
-		u32_le_to_u8(chunk.hash, hash, chunk.len);
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
+		u32_le_to_u8(chunk.hash, hash, 4);
 	return (free_u32_md_block(&(chunk.block)));
 }
 
-void			ft_ssl_md5_buffer(char *data, char **hash)
+int				ft_ssl_md5_buffer(char *data, char **hash)
 {
-	t_md5_buffer	chunk;
+	t_md5_chunk	chunk;
 
-	chunk.len = md_pad_u8_to_u32(data, chunk.data, LITTLE_ENDIAN);
-	chunk.pos = 0;
+	if (!init_u32_md_block(&(chunk.block), 16, 64))
+		return (0);
+	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, LITTLE_ENDIAN);
+	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
-	while (chunk.pos < chunk.len)
+	while (chunk.buf_pos < chunk.buf_len)
 	{
 		set_block(&chunk);
-		chunk.pos += 16;
+		chunk.buf_pos += 16;
 	}
 	if ((*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
-		u32_le_to_u8(chunk.hash, hash, chunk.len);
-	free(chunk.data);
-	return (1);
+		u32_le_to_u8(chunk.hash, hash, 4);
+	return (free_u32_md_block(&(chunk.block)));
 }

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:02:15 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 18:03:14 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 13:43:16 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_SSL_SHA256_H
 
 # include <stdint.h>
+# include "ft_ssl_md_block.h"
 
 # define A 0
 # define B 1
@@ -27,16 +28,18 @@
 typedef struct	s_sha256_chunk
 {
 	t_u32_md_block	block;
-	uint32_t	s[64];
-	uint32_t	hash[8];
-	uint32_t	temp[8];
+	uint32_t		buf_len;
+	uint32_t		buf_pos;
+	uint32_t		s[64];
+	uint32_t		hash[8];
+	uint32_t		temp[8];
 }				t_sha256_chunk;
 
 extern uint32_t	g_sha256_tab[];
 
-void			init_sha256_message_schedule(t_sha256_chunk *chunk)
-void			compress_sha256_chunk(t_sha256_chunk *chunk)
+void			init_sha256_message_schedule(t_sha256_chunk *chunk);
+void			compress_sha256_chunk(t_sha256_chunk *chunk);
 void			update_sha256_message_schedule(t_sha256_chunk *chunk,
-		uint8_t type)
+		uint8_t type);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:30:24 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 17:21:14 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 14:21:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ static uint64_t	message_schedule_sum(uint64_t message_schedule[80],
 		return (rot_r(message_schedule[offset - 2], 19, 64) ^
 				rot_r(message_schedule[offset - 2], 61, 64) ^
 				(message_schedule[offset - 2] >> 6));
-	if (type == S1)
+	else if (type == S1)
 		return (rot_r(message_schedule[offset - 15], 1, 64) ^
 				rot_r(message_schedule[offset - 15], 8, 64) ^
 				(message_schedule[offset - 15] >> 7));
-	return (0);
+	else
+		return (0);
 }
 
 static uint64_t	compression_sum(t_sha512_chunk *c, uint8_t type)
@@ -33,10 +34,11 @@ static uint64_t	compression_sum(t_sha512_chunk *c, uint8_t type)
 	if (type == S0)
 		return (rot_r(c->temp[A], 28, 64) ^ rot_r(c->temp[A], 34, 64) ^
 				rot_r(c->temp[A], 39, 64));
-	if (type == S1)
+	else if (type == S1)
 		return (rot_r(c->temp[E], 14, 64) ^ rot_r(c->temp[E], 18, 64) ^
 				rot_r(c->temp[E], 41, 64));
-	return (0);
+	else
+		return (0);
 }
 
 void			init_sha512_message_schedule(t_sha512_chunk *chunk)
@@ -46,7 +48,7 @@ void			init_sha512_message_schedule(t_sha512_chunk *chunk)
 	i = 0;
 	while (i < 16)
 	{
-		chunk->s[i] = chunk->data[chunk->pos + i];
+		chunk->s[i] = chunk->block.data[chunk->buf_pos + i];
 		i++;
 	}
 	while (i < 80)
@@ -67,10 +69,10 @@ void			compress_sha512_chunk(t_sha512_chunk *chunk)
 	i = 0;
 	while (i < 80)
 	{
-		temp1 = compression_sum(chunk, S1) + 
+		temp1 = compression_sum(chunk, S1) +
 			u64_ch(chunk->temp[E], chunk->temp[F], chunk->temp[G]) +
 			chunk->temp[H] + chunk->s[i] + g_sha512_tab[i];
-		temp2 = compression_sum(chunk, S0) + 
+		temp2 = compression_sum(chunk, S0) +
 			u64_maj(chunk->temp[A], chunk->temp[B], chunk->temp[C]);
 		chunk->temp[H] = chunk->temp[G];
 		chunk->temp[G] = chunk->temp[F];
