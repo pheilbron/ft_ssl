@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:23:34 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 13:55:46 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 18:07:49 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct	s_u32_md_block
 	uint8_t		size;
 	uint32_t	*bit_len;
 	uint8_t		bit_len_size;
-	short		padding;
+	int16_t		padding;
 }				t_u32_md_block;
 
 typedef struct	s_u64_md_block
@@ -32,7 +32,7 @@ typedef struct	s_u64_md_block
 	uint8_t		size;
 	uint64_t	*bit_len;
 	uint8_t		bit_len_size;
-	short		padding;
+	int16_t		padding;
 }				t_u64_md_block;
 
 int				init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,

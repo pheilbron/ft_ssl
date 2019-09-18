@@ -6,13 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:25:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 14:26:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 20:54:55 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl_md_block.h"
 
-int	init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
+int			init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 		short bit_len_size)
 {
 	short	i;
@@ -27,16 +27,54 @@ int	init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	i = 0;
 	while (i < block_bit_len_size)
 		block->bit_len[i++] = 0;
-	block->padding = -1 * bit_len_size;
+	block->padding = hash_size * -32;
 	return (1);
 }
 
-int	set_u32_md_block(t_u32_md_block *out, t_ssl_file *in, uint8_t type)
+static void	u32_increment(uint32_t **bit_len, uint8_t bit_len_size,
+		uint32_t size)
+{
+	uint8_t	i;
+
+	i = 0;
+	while (i < bit_len_size && (uint32_t)((*bit_len)[i] + size) < size)
+		i++;
+	if (i >= bit_len_size)
+		i--;
+	if (i > 0)
+	{
+		(*bit_len)[i]++;
+		while (i > 0)
+			(*bit_len)[i--] = 0;
+	}
+	(*bit_len)[i] += size;
+}
+
+static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
+{
+	int	i;
+
+	i = size_set;
+	if ((*data)->padding < 0)
+		(*data)->padding = ((*data)->padding * -1) - 
+	(*data)->padding = (*data)->padding * ((*data)->padding < 0 ? -1 : 1);
+	while (i < (*data)->size && (*data)->padding > 0)
+	{
+		(*data)->data[i] = 0;
+		i++;
+		(*data)->padding -= 32;
+	}
+
+int			set_u32_md_block(t_u32_md_block *out, t_ssl_file *in, uint8_t type)
 {
 	char	data[out->size * 4];
 	int		size;
 
-	if (out->padding < 0 && in->fd == 0)
+	if (out->padding == 0)
+	{
+		close(in->fd);
+		return ((out->padding = DONE));
+	}
 	if (out->padding < 0 &&
 		(size = ft_ssl_read(in->fd, data, out->size * 4)) == (int)out->size)
 	{
@@ -45,18 +83,16 @@ int	set_u32_md_block(t_u32_md_block *out, t_ssl_file *in, uint8_t type)
 		else if (type == LITTLE_ENDIAN)
 			u8_to_u32_little_end(&(out->data), out->size, read_data, size);
 		u32_increment(&(out->bit_len), out->bit_len_size, size);
-		return (1);
+		return (size);
 	}
 	else if (size == -1)
 		return (SYS_ERROR);
-	else if (size < (int)out->size)
-		//set padding value
-	if (out->padding >= 0)
-		//set padding and len (if possible)
+	if (out->padding > 0 || size < out->size)
+		return (u32_pad(&out, type, size));
 	return (out->padding);
 }
 
-int	free_u32_md_block(t_u32_md_block *block)
+int			free_u32_md_block(t_u32_md_block *block)
 {
 	if (block->data)
 		free(block->data);

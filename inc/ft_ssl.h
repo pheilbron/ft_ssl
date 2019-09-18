@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 14:31:46 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 17:45:37 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct	s_ssl_file
 {
 	int			fd;
 	char		*reference;
+	char		*data;
 	uint8_t		print_flag;
 	t_error		e;
 }				t_ssl_file;

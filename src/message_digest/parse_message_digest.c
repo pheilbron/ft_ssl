@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 14:30:12 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/17 17:46:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static int	parse_md_stdin(t_ssl_context *c)
 		ft_dstr_add(s, read_buf, size);
 	file->fd = 0;
 	file->reference = ft_dstr_release(s);
+	file->data = file->reference;
 	file->e.no = 1;
 	file->flag = c->options | _P;
 	ft_queue_enqueue(c->files, file);
@@ -71,6 +72,7 @@ static int	parse_md_string(t_ssl_context *c, char **data, int len, int *i)
 		return (c->e.no = SYS_ERROR);
 	file->fd = 0;
 	file->reference = data[(*i)++];
+	file->data = file->reference;
 	file->flag = (c->options & ~_P) | _S;
 	file->e.no = 1;
 	ft_queue_enqueue(c->files, file);
