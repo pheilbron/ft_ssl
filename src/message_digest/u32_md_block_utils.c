@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:25:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 20:54:55 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/18 08:39:44 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,10 @@ static void	u32_increment(uint32_t **bit_len, uint8_t bit_len_size,
 static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
 {
 	int	i;
+	int	j;
 
 	i = size_set;
+	j = 0;
 	if ((*data)->padding < 0)
 		(*data)->padding = ((*data)->padding * -1) - 
 	(*data)->padding = (*data)->padding * ((*data)->padding < 0 ? -1 : 1);
@@ -64,6 +66,15 @@ static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
 		i++;
 		(*data)->padding -= 32;
 	}
+	while (i < (*data)->size)
+	{
+		(*data)->data[i] = (*data)->bit_len[type == BIG_ENDIAN ? j :
+			(*data)->bit_size_len - j - 1];
+		i++;
+		j++;
+	}
+	return (i);
+}
 
 int			set_u32_md_block(t_u32_md_block *out, t_ssl_file *in, uint8_t type)
 {

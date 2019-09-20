@@ -6,15 +6,17 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 17:46:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/18 09:44:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include "ft_ssl.h"
 #include "ft_ssl_options.h"
 #include "ft_ssl_error.h"
+#include "ft_string.h"
 
 #define READ_BUF_SIZE 4096
 
@@ -35,7 +37,7 @@ static int	parse_md_stdin(t_ssl_context *c)
 	file->data = file->reference;
 	file->e.no = 1;
 	file->flag = c->options | _P;
-	ft_queue_enqueue(c->files, file);
+	ft_queue_push(c->data, file);
 	return (file->e.no);
 }
 
@@ -48,17 +50,17 @@ static int	parse_md_file(t_ssl_context *c, char **data, int i)
 	if ((file->fd = open(data[i], O_DIRECTORY)))
 	{
 		close(file->fd);
-		ft_ssl_new_error(file->e, DIRECTORY, data[i]);
+		ft_ssl_new_error(&(file->e), DIRECTORY, data[i]);
 	}
 	else if ((file->fd = open(data[i], O_RDONLY)) < 0)
-		ft_ssl_new_error(file->e, INV_FILE, data[i]);
+		ft_ssl_new_error(&(file->e), INV_FILE, data[i]);
 	else
 	{
 		file->reference = data[i];
 		file->e.no = 1;
 	}
 	file->flag = c->options & ~_P & ~_S;
-	ft_queue_enqueue(c->files, file);
+	ft_queue_enqueue(c->data, file);
 	return (file->e.no);
 }
 
@@ -75,7 +77,7 @@ static int	parse_md_string(t_ssl_context *c, char **data, int len, int *i)
 	file->data = file->reference;
 	file->flag = (c->options & ~_P) | _S;
 	file->e.no = 1;
-	ft_queue_enqueue(c->files, file);
+	ft_queue_enqueue(c->data, file);
 	if ((*i < len && ft_strcmp("-s", data[*i]) != 0 &&
 				ft_strcmp("--string", data[*i]) != 0) || *i >= len)
 		c->options &= ~_S;
@@ -95,13 +97,13 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 			if (set_ssl_long_option(c, data[*i] + ++data_i) < 0)
 				return (c->e.no);
 		while (data[*i][data_i])
-			if (set_ssl_option(chk, data[*i][data_i++], e) < 0)
+			if (set_ssl_option(c, data[*i][data_i++]) < 0)
 				return (c->e.no);
 		(*i)++;
 		if ((c->options & _S) == _S)
 		{
 			while (((c->options & _S) == _S) &&
-					parse_md_string(c, data[i], len, &i) >= 0)
+					parse_md_string(c, &(data[*i]), len, i) >= 0)
 				;
 			return (c->e.no = 1);
 		}
@@ -116,10 +118,10 @@ void		parse_message_digest(t_ssl_context *c, char **data, int len,
 		c->options |= IN;
 	if (len == 1 && parse_md_stdin(c) < 0)
 		print_fatal_error(*c);
-	else if (parse_md_options(c, data, len, &i) < 0)
+	else if (parse_md_options(c, data, len, i) < 0)
 		print_fatal_error(*c);
 	else if ((c->options & _P) == _P)
 		parse_md_stdin(c);
-	while (i < len && parse_md_file(c, data, i) != SYS_ERROR)
-		i++;
+	while (*i < len && parse_md_file(c, data, *i) != SYS_ERROR)
+		(*i)++;
 }

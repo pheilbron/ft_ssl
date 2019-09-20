@@ -6,11 +6,33 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/16 20:15:29 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/19 09:14:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+
+static int	parse_cipher_options(t_ssl_context *c, char **data, int len, int *i)
+{
+	int	data_i;
+
+	while (*i < len && data[*i][0] == '-')
+	{
+		data_i = 1;
+		while (data[*i][data_i])
+			if (set_ssl_option(chk, data[*i][data_i++], e) < 0)
+				return (c->e.no);
+		(*i)++;
+		if ((c->options & _S) == _S)
+		{
+			while (((c->options &_S) == _S) &&
+					parse_md_string(c, data[i], len, &i) >= 0)
+				;
+			return (c->e.no = 1);
+		}
+	}
+	return (c->e.no = 1);
+}
 
 void	parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 {

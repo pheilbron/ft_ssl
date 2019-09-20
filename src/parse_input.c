@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/09 14:36:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/18 09:50:27 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,22 @@
 
 t_ssl_algorithm	g_algo_tab[] = 
 {
-	{MD | MD5, "md5", &ft_ssl_md5, &process_message_digest},
-	{MD | SHA1, "sha1", &ft_ssl_sha1, &process_message_digest},
-	{MD | SHA224, "sha224", &ft_ssl_sha224, &process_message_digest},
-	{MD | SHA256, "sha256", &ft_ssl_sha256, &process_message_digest},
-	{MD | SHA384, "sha384", &ft_ssl_sha384, &process_message_digest},
-	{MD | SHA512, "sha512", &ft_ssl_sha512, &process_message_digest},
-	{MD | SHA512_224, "sha512/224", &ft_ssl_sha512_224,
+	{MD | MD5, "md5", &ft_ssl_md5_file, &ft_ssl_md5_buffer, &process_message_digest},
+	{MD | SHA1, "sha1", &ft_ssl_sha1_file, &ft_ssl_sha1_buffer, &process_message_digest},
+	{MD | SHA224, "sha224", &ft_ssl_sha224_rush, &ft_ssl_sha224_buffer,
 		&process_message_digest},
-	{MD | SHA512_256, "sha512/256", &ft_ssl_sha512_256,
+	{MD | SHA256, "sha256", &ft_ssl_sha256_file, &ft_ssl_sha256_buffer,
 		&process_message_digest},
-//	{base64, "base64", &ft_ssl_base64, &process_cipher},
-	{0, NULL, NULL, NULL}
+	{MD | SHA384, "sha384", &ft_ssl_sha384_file, &ft_ssl_sha256_buffer,
+		&process_message_digest},
+	{MD | SHA512, "sha512", &ft_ssl_sha512_file, &ft_ssl_sha512_buffer,
+		&process_message_digest},
+	{MD | SHA512_224, "sha512/224", &ft_ssl_sha512_224_file, &ft_ssl_sha512_225_buffer,
+		&process_message_digest},
+	{MD | SHA512_256, "sha512/256", &ft_ssl_sha512_256_file, &ft_ssl_sha512_256_buffer,
+		&process_message_digest},
+//	{base64, "base64", NULL, &ft_ssl_base64, &process_cipher},
+	{0, NULL, NULL, NULL, NULL}
 };
 
 static int	parse_ssl_command(t_ssl_context *c, char *command)
