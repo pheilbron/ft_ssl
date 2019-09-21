@@ -6,12 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/10 13:47:32 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/21 15:46:51 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_ssl_error.h"
+#include "ft_ssl_options.h"
 #include "ft_dstring.h"
 
 #define SHIFT_1 18
@@ -83,10 +84,10 @@ static void	encrypt_block(t_dstring *data_out, char *raw_data, int len)
 				i + 2 < len ? char_to_base64(trio & MASK_4) : '=');
 		i += 3;
 	}
-	ft_dstr_add(data_out, "\n");
+	ft_dstr_add(data_out, "\n", 1);
 }
 
-static void	decrypt_data(t_dstring *data_out, char *raw_data, int len)
+static void	decrypt_block(t_dstring *data_out, char *raw_data, int len)
 {
 	uint32_t	trio;
 	int			i;
@@ -106,9 +107,9 @@ static void	decrypt_data(t_dstring *data_out, char *raw_data, int len)
 			i++;
 		}
 		ft_dstr_addf(data_out, "%c%c%c",
-				j > 0 ? base64_to_char((trio & D_MASK1) >> D_SHIFT_1) : '\0',
-				j > 1 ? base64_to_char((trio & D_MASK2) >> D_SHIFT_2) : '\0',
-				j > 2 ? base64_to_char((trio & D_MASK3) >> D_SHIFT_3) : '\0');
+				j > 0 ? base64_to_char((trio & D_MASK_1) >> D_SHIFT_1) : '\0',
+				j > 1 ? base64_to_char((trio & D_MASK_2) >> D_SHIFT_2) : '\0',
+				j > 2 ? base64_to_char(trio & D_MASK_3) : '\0');
 	}
 }
 
@@ -122,7 +123,7 @@ char		*ft_ssl_base64(t_ssl_file *file)
 	if (!(data_out = ft_dstr_init()))
 		return (NULL);
 	block_size = (file->flag & _D) == _D ? 65 : 48;
-	if (!(data_in = malloc(sizeof(*raw_data) * (1 + block_size))))
+	if (!(raw_data = malloc(sizeof(*raw_data) * (1 + block_size))))
 		return (NULL);
 	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))
 	{
