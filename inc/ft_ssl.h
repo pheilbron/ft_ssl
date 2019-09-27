@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/18 09:47:15 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/09/27 08:45:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct	s_ssl_context
 {
 	t_ssl_algorithm	algorithm;
 	uint16_t		options;
-	t_queue			*data;
+	void			*data;
 	t_error			e;
 }				t_ssl_context;
 
