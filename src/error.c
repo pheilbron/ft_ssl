@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/02 17:46:43 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/02 18:35:55 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@ t_error	g_error_tab[] =
 	{INV_FILE, "%s: No such file or directory", ""},
 	{INV_DIR, "%s: Is a directory", ""},
 	{MISSING_ARG, "%s: option requires an argument -- %s", ""},
-	{INV_ACC_OPEN, "Unable to open '%s': No such file or directory", ""}
-	{INV_FILE_OPEN, "Unable to open '%s': Permission denied", ""}
-	{INV_FILE_CREATE, "Unable to create '%s': Permission denied", ""}
+	{INV_ACC_OPEN, "Unable to open '%s': No such file or directory", ""},
+	{INV_FILE_OPEN, "Unable to open '%s': Permission denied", ""},
+	{INV_FILE_CREATE, "Unable to create '%s': Permission denied", ""},
+	{0, "", ""}
 };
 
 static void	print_commands(void)
 {
-	t_dstring		*s;
+	t_dstring	*s;
 
 	if ((s = ft_dstr_init()))
 	{
@@ -49,16 +50,9 @@ static void	print_commands(void)
 
 int			print_fatal_error(t_ssl_context c)
 {
-	if (c.e.no == INV_COMMAND)
-	{
-		ft_printf("ft_ssl: '%s' is an invalid command.\n", c.e.data);
-		print_commands();
-	}
-	else if (c.e.no == INV_OPTION)
-	{
-		ft_printf("ft_ssl: illegal option -- %s\n", c.e.data);
+	ft_error_print_std_message("ft_ssl", c->e);
+	if (c.e.no == INV_COMMAND || c.e.no == INV_OPTION)
 		print_usage(c);
-	}
 	return (0);
 }
 
