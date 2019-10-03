@@ -1,5 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
+
 /*                                                        :::      ::::::::   */
 /*   parse_options.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -16,19 +15,20 @@
 
 t_ssl_option		g_options_tab[] =
 {
-    {'a', CIPHER, _A, "base64"},
-    {'d', CIPHER, _D, "decrypt"},
-    {'e', CIPHER, _E, "encrypt"},
-    {'i', CIPHER, _I, "input-file"},
-    {'k', CIPHER, _K, "key"},
-    {'o', CIPHER, _O, "output-file"},
-    {'p', MD, _P, "stdin"},
-    {'p', CIPHER, _P, "password"},
-    {'q', MD, _Q, "print-quiet"},
-    {'r', MD, _R, "print-reverse"},
-    {'s', MD, _S, "string"},
-    {'s', CIPHER, _S, "salt"},
-    {'v', CIPHER, _V, "init-vector"},
+    {'a', CIPHER | DES, _A, "base64"},
+    {'d', CIPHER | BASE64, _B, "break"},
+    {'d', CIPHER | BASE64 | DES, _D, "decrypt"},
+    {'e', CIPHER | BASE64 | DES, _E, "encrypt"},
+    {'i', CIPHER | BASE64 | DES, _I, "input-file"},
+    {'k', CIPHER | DES, _K, "key"},
+    {'o', CIPHER | BASE64 | DES, _O, "output-file"},
+    {'p', MD | MD_ALL, _P, "stdin"},
+    {'p', CIPHER | DES, _P, "password"},
+    {'q', MD | MD_ALL, _Q, "print-quiet"},
+    {'r', MD | MD_ALL, _R, "print-reverse"},
+    {'s', MD | MD_ALL, _S, "string"},
+    {'s', CIPHER | DES, _S, "salt"},
+    {'v', CIPHER | DES, _V, "init-vector"},
     {0, 0, 0, 0}
 };
 
@@ -40,10 +40,12 @@ int	set_ssl_option(t_ssl_context *c, char op)
 	while (g_options_tab[i].op)
 	{
 		if (g_options_tab[i].type.family == c->algorithm.type.family &&
+				g_options_tab[i].type.algo == (c->algorithm.type.algo &
+				   g_options_tab[i].type.algo) &&
 				g_options_tab[i].op == op)
 		{
 			chk->options |= g_options_tab[i].flag;
-			return (c->e.no = 1);
+			return (c->e.no = (int)g_options_tab[i].flag);
 		}
 		i++;
 	}
@@ -59,10 +61,12 @@ int	set_ssl_long_option(t_ssl_context *c, char *option)
 	while (g_options_tab[i].op)
 	{
 		if (g_options_tab[i].type.family == c->algorithm.type.family &&
+				g_options_tab[i].type.algo == (c->algorithm.type.algo &
+				   g_options_tab[i].type.algo) &&
 				ft_strcmp(g_options_tab[i].long_op, option) == 0)
 		{
 			chk->options |= g_options_tab[i].flag;
-			return (c->e.no = 1);
+			return (c->e.no = (int)g_options_tab[i].flag);
 		}
 		i++;
 	}

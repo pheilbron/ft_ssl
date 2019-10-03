@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/27 08:45:11 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/02 11:09:14 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef	union	u_ssl_algorithm_type
 	struct
 	{
 		uint16_t	family : 2;
-		uint16_t	type : 14;
+		uint16_t	algo : 14;
 	}			algorithm;
 }				t_ssl_algorithm_type;
 

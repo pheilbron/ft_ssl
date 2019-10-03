@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/27 08:38:57 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/27 14:21:14 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/02 10:47:54 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 typedef struct	s_cipher_context
 {
-	char	*in_file;
-	char	*out_file;
-	char	*salt;
-	char	*init_vect;
-	char	**key;
-	char	*password;
+	t_ssl_file	*in_file;
+	t_ssl_file	*out_file;
+	char		*salt;
+	char		*init_vect;
+	char		*key[3];
+	char		*password;
 }				t_cipher_context;
 
 #endif

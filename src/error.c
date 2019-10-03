@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 15:44:07 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/02 17:46:43 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,19 @@
 #include "ft_stdio.h"
 #include "ft_printf.h"
 #include "ft_dstring.h"
+
+t_error	g_error_tab[] =
+{
+	{INV_COMMAND, "'%s' is an invalid command.", ""},
+	{INV_OPTION, "illegal option -- %.1s", ""},
+	{INV_LONG_OPTION, "illegal option -- %s", ""},
+	{INV_FILE, "%s: No such file or directory", ""},
+	{INV_DIR, "%s: Is a directory", ""},
+	{MISSING_ARG, "%s: option requires an argument -- %s", ""},
+	{INV_ACC_OPEN, "Unable to open '%s': No such file or directory", ""}
+	{INV_FILE_OPEN, "Unable to open '%s': Permission denied", ""}
+	{INV_FILE_CREATE, "Unable to create '%s': Permission denied", ""}
+};
 
 static void	print_commands(void)
 {

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/18 09:45:26 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/02 11:05:08 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,17 @@
 # define STANDARD 3
 
 # define MD5 1 << 2
-# define SHA1 2 << 2
-# define SHA224 3 << 2
-# define SHA256 4 << 2
-# define SHA384 5 << 2
-# define SHA512 6 << 2
+# define SHA1 1 << 3
+# define SHA224 1 << 4
+# define SHA256 1 << 5
+# define SHA384 1 << 6
+# define SHA512 1 << 7
+# define SHA512_224 1 << 8
+# define SHA512_256 1 << 9
+# define MD_ALL 0b1111111100
 
 # define BASE64 1 << 2
-# define DES 2 << 2
+# define DES 1 << 3
 
 typedef struct	s_ssl_option
 {
