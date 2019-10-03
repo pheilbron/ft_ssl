@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 09:16:25 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/19 09:18:03 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/03 14:16:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 typedef struct	s_des_context
 {
-	salt
-	iv
 	control structures
 }				t_des_context;
 
