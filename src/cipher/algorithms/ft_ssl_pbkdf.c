@@ -10,4 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+uint64_t	ft_ssl_des_pbkdf(char *password)
+{
+	int			i;
+	char		*key;
+	uint64_t	ret;
 
+	i = 0;
+	ft_ssl_sha256(password, &key);
+	while (i < 8)
+	{
+		ret |= key[i] << (i * 8);
+		i++;
+	}
+	free(key);
+	return (ret);
+}

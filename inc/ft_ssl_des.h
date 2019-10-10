@@ -15,7 +15,15 @@
 
 typedef struct	s_des_context
 {
-	control structures
+	uint64_t	block;
+	t_dstring	*out;
+	uint8_t		mode;
+	uint8_t		type;
+	uint32_t	left;
+	uint32_t	right;
+	uint64_t	key[3];
+	uint64_t	round_key[16];
+	uint64_t	init_vect;
 }				t_des_context;
 
 #endif
