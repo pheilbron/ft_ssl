@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/27 08:38:57 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/02 10:47:54 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:53:14 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct	s_cipher_context
 	char		*salt;
 	char		*init_vect;
 	char		*key[3];
-	char		*password;
+	char		password[256];
 }				t_cipher_context;
 
 #endif

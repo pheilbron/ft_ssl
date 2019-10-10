@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 19:19:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/09 19:30:54 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:34:37 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ uint8_t	g_init_permutation_tab[64] = {
 	60, 52, 44, 36, 28, 20, 12, 4,
 	62, 54, 46, 38, 30, 22, 14, 6,
 	64, 56, 48, 40, 32, 24, 16, 8,
-	57, 49, 41, 33, 25, 17, 9 , 1,
+	57, 49, 41, 33, 25, 17, 9, 1,
 	59, 51, 43, 35, 27, 19, 11, 3,
 	61, 53, 45, 37, 29, 21, 13, 5,
 	63, 55, 47, 39, 31, 23, 15, 7};
@@ -30,53 +30,28 @@ uint8_t g_final_permutation_tab[64] = {
 	34, 2, 42, 10, 50, 18, 58, 26,
 	33, 1, 41, 9, 49, 17, 57, 25};
 
-uint8_t	expansion_tab[48] = {
-	32, 1, 2, 3, 4, 5,
-	4, 5, 6, 7, 8, 9,
-	8, 9, 10, 11, 12, 13,
-	12, 13, 14, 15, 16, 17,
-	16, 17, 18, 19, 20, 21,
-	20, 21, 22, 23, 24, 25,
-	24, 25, 26, 27, 28, 29,
-	28, 29, 30, 31, 32, 1};
-
-uint8_t	permutation_tab[32] = {
-	16, 7, 20, 21, 29, 12, 28, 17,
-	1, 15, 23, 26, 5, 18, 31, 10,
-	2, 8, 24, 14, 32, 27, 3, 9,
-	19, 13, 30, 6, 22, 11, 4, 25};
-
-void	permute_des_data(uint64_t *data, uint8_t permutation_tab[64])
+static void	encode_block(t_des_context *c)
 {
-	int			i;
-	uint64_t	out;
+	uint32_t	temp;
 
-	i = 0;
-	out = 0;
-	while (i < 64)
-	{
-		out |= (((*data) >> permutation_tab[i]) & 1) << i;
-		i++;
-	}
-	(*data) = out;
-}
-
-static void	set_des_block(t_des_context *c)
-{
-	permute_des_data(&(c->data), g_init_permutation_tab);
+	scramble_des_block(&(c->block), g_init_permutation_tab);
 	c->left = c->data >> 32;
 	c->right = c->data & 0xFFFF;
 	while (i < 16)
 	{
-		mix;
+		feistel_process(c, i);
 		if (i != 15)
-			swap;
+		{
+			temp = c->left;
+			c->left = c->right;
+			c->right = temp;
+		}
 	}
 	c->data = (c->left << 32) & c->right;
-	permute_des_data(&(c->data), g_final_permutation_tab);
+	scramble_des_block(&(c->block), g_final_permutation_tab);
 }
 
-char		*ft_ssl_des(t_cipher_context *c)
+char		*ft_ssl_des_ecb(t_ssl_context *c)
 {
 	ft_des_context	des;
 	int				status;
@@ -84,7 +59,7 @@ char		*ft_ssl_des(t_cipher_context *c)
 	if (!init_des_context(&des, c))
 		return (NULL);
 	while ((status = set_u64_bloc))
-		set_des_block(&des);
+		((c->flag & _E) == _E) ? encode_block(&des) : decode_block(&des);
 	if (status != DONE)
 		c->e.no = SYS_ERROR;
 	return (ft_dstr_release(des.out));

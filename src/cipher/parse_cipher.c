@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/03 13:11:22 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/10 15:04:50 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,32 @@ static int	parse_cipher_stdin(t_ssl_context *c)
 	return (file->e.no);
 }
 
+int	parse_password(t_ssl_context *c, t_cipher_context *cipher)
+{
+	t_dstring	*s;
+	char		v_pass[256];
+
+	if (!(s = ft_dstr_init(s)))
+		return (c->e.no = SYS_ERROR);
+	ft_dstr_addf(s, "enter %s encryption password:", c->algorithm.name);
+	if (readpassphrase(s->buf, cipher->password, sizeof(cipher->password),
+				RPP_STDIN))
+	{
+		ft_dstr_insert(s, "Verifying - ", 12, 0);
+		if (readpassphrase(s->buf, v_pass, sizeof(v_pass),
+					RPP_STDIN))
+		{
+			ft_dstr_free(s);
+			if (ft_strcmp(c->password, v_pass) != 0)
+				return (c->e.no = INV_PASS);
+			else
+				return (c->e.no = 1);
+		}
+	}
+	ft_dstr_free(s);
+	return (c->e.no = SYS_ERROR);
+}
+
 void		parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 {
 	t_cipher_context	*cipher;
@@ -132,6 +158,8 @@ void		parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 			print_fatal_error(*c);
 		else if (((c->flag & _I) == _I && init_in_file(c) < 0) ||
 					((c->flag & _O) == _O && init_out_file(c) < 0))
+			print_fatal_error(*c);
+		else if (parse_cipher_password(c, cipher) < 0)
 			print_fatal_error(*c);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 09:16:25 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/03 14:16:22 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/10 13:35:33 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ typedef struct	s_des_context
 	uint32_t	left;
 	uint32_t	right;
 	uint64_t	key[3];
-	uint64_t	round_key[16];
+	uint64_t	sub_key[16];
 	uint64_t	init_vect;
 }				t_des_context;
 

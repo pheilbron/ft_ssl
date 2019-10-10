@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/03 12:58:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:40:35 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_error	g_error_tab[] =
 	{INV_LONG_OPTION, "illegal option -- %s", ""},
 	{INV_FILE, "%s: No such file or directory", ""},
 	{INV_DIR, "%s: Is a directory", ""},
+	{INV_PASS, "Verify failure\nbad password read", ""},
 	{MISSING_ARG, "%s: option requires an argument -- %s", ""},
 	{INV_ACC_OPEN, "Unable to open '%s': No such file or directory", ""},
 	{INV_FILE_OPEN, "Unable to open '%s': Permission denied", ""},
