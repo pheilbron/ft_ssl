@@ -13,6 +13,9 @@
 #ifndef FT_SSL_DES_H
 # define FT_SSL_DES_H
 
+# include <stdint.h>
+# include "ft_dstring.h"
+
 typedef struct	s_des_context
 {
 	uint64_t	block;
