@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 19:19:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/10 14:34:37 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/21 19:59:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,13 @@ char		*ft_ssl_des_ecb(t_ssl_context *c)
 {
 	ft_des_context	des;
 	int				status;
+	void			(*f)();
 
 	if (!init_des_context(&des, c))
 		return (NULL);
+	f = ((c->flag & _E) == _E) ? &encode_block : &decode_block;
 	while ((status = set_u64_bloc))
-		((c->flag & _E) == _E) ? encode_block(&des) : decode_block(&des);
+		(*f)(&des);
 	if (status != DONE)
 		c->e.no = SYS_ERROR;
 	return (ft_dstr_release(des.out));
