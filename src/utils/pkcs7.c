@@ -6,19 +6,19 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 19:49:30 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/21 19:57:04 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/22 14:22:58 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-void	pad_pkcs7(char *in, char *out, int block_size)
+void	pad_pkcs7(char *in, char *out, int in_len, int block_size)
 {
 	int		i;
 	char	pad;
 
 	i = 0;
-	while (in[i] && i < block_size)
+	while (in[i] && i < in_len && i < block_size)
 	{
 		out[i] = in[i];
 		i++;

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/10 14:40:35 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/22 12:07:00 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_error	g_error_tab[] =
 	{INV_FILE_OPEN, "Unable to open '%s': Permission denied", ""},
 	{INV_FILE_CREATE, "Unable to create '%s': Permission denied", ""},
 	{INV_DIR_CREATE, "Unable to create '%s': Is a directory", ""},
+	{INV_DES_KEY, "bad decrypt", ""},
 	{0, "", ""}
 };
 
