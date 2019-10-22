@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 19:19:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/10 14:34:37 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/21 14:11:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,9 @@ void	feistel_process(t_des_context *c, int round)
 	while (++i < 32)
 		out |= ((c->block >> (64 - g_permutation_tab[i])) & 1) << (63 - i);
 	ft_printf("final p: %.32b\n", out >> 32);
-	c->block = (((out >> 32) ^ c->left) << 32) | c->left;
+	c->block = c->left ^ (out >> 32);
+	c->left = c->right;
+	c->right = c->block;
 }
 
 static void	encode_block(t_des_context *c)
@@ -163,25 +165,21 @@ static void	encode_block(t_des_context *c)
 	{
 		ft_printf("%d left: %.32b\tright: %.32b\n", i, c->left, c->right);
 		feistel_process(c, i);
-		if (i != 15)
-		{
-			c->left = c->block >> 32;
-			c->right = c->block & 0xFFFFFFFF;
-		}
 		i++;
 	}
-	c->block = ((uint64_t)(c->left) << 32) | (uint64_t)(c->right);
+	c->block = ((uint64_t)(c->right) << 32) | (uint64_t)(c->left);
 	ft_printf("Pre IP-1:\t%.64llb\n", c->block);
 	scramble_des_block(&(c->block), g_final_permutation_tab);
 	ft_printf("IP-1:\t\t%.64llb\n", c->block);
 	ft_printf("\t\t%.16llX\n", c->block);
+	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
 void	setup_block(t_des_context *c, int pos, int len, char *s)
 {
 	c->block = 0;
 	for (int i = 0; i < 8 && i < len - pos; i++)
-		c->block += (((uint64_t)(s[i + pos])) << ((7 - i) * 8));
+		c->block |= ((((uint64_t)(s[i + pos])) & 0xff) << ((7 - i) * 8));
 }
 
 uint8_t	g_subkey_permutation_tab1[] = {
@@ -290,6 +288,10 @@ int	main(void)
 	des.key[0] = 0x133457799BBCDFF1ULL;
 	int	pos = 0;
 	char	*s = "\x1\x23\x45\x67\x89\xAB\xCD\xEF";
+	ft_printf("MESSAGE: ");
+	for (int i = 0; i < 8; i++)
+		ft_printf("%.8b ", s[i]);
+	ft_printf("\n");
 	int	len = 8;
 	if (!(des.out = ft_dstr_init()))
 		return (0);
