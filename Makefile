@@ -25,7 +25,8 @@ SRC			= main get_info parse_input parse_options error usage clean \
 			  read_data
 UTILS		= rotate md_pad_u8_to_u32 md_pad_u8_to_u64 \
 			  u32_be_to_u8 u32_le_to_u8 u64_be_to_u8 u64_le_to_u8 \
-			  u8_to_u32_be u8_to_u32_le u8_to_u64_be u8_to_u64_le
+			  u8_to_u32_be u8_to_u32_le u8_to_u64_be u8_to_u64_le \
+			  pkcs7
 MD			= parse_message_digest process_message_digest print_message_digest \
 			  u32_md_block_utils u64_md_block_utils \
 			  algorithms/ft_ssl_md5 \
@@ -36,12 +37,20 @@ MD			= parse_message_digest process_message_digest print_message_digest \
 			  algorithms/ft_ssl_sha512 algorithms/ft_ssl_sha512_aux \
 			  algorithms/ft_ssl_sha512_224 algorithms/ft_ssl_sha512_256 \
 			  algorithms/ft_ssl_sha_utils
-CIPHER		= parse_cipher
+CIPHER		= parse_cipher \
+			  algorithms/ft_ssl_base64 \
+			  algorithms/u64_block \
+			  algorithms/des/ft_des_utils \
+			  algorithms/des/ft_ssl_des_cbc \
+			  algorithms/des/ft_ssl_des_cfb \
+			  algorithms/des/ft_ssl_des_ctr \
+			  algorithms/des/ft_ssl_des_ecb \
+			  algorithms/des/ft_ssl_des_ofb \
+			  algorithms/des/ft_ssl_des_pcbc
 STANDARD	= parse_standard
 
 OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, \
 		$(patsubst %, utils/%, $(UTILS)) \
-		$(patsubst %, message_digest/%, $(MD)) \
 		$(patsubst %, cipher/%, $(CIPHER)) \
 		$(patsubst %, standard/%, $(STANDARD)))
 

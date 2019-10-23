@@ -46,10 +46,8 @@ typedef struct	s_ssl_algorithm
 {
 	t_ssl_algorithm_type	type;
 	char					*name;
-	void					(*file_f)();
-	void					(*buffer_f)();
+	void					(*f)();
 	void					(*process)();
-	void					(*print)();
 }				t_ssl_algorithm;
 
 typedef struct	s_ssl_context

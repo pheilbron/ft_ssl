@@ -54,7 +54,8 @@ char		*ft_ssl_des_ecb(t_ssl_context *c)
 	if (!init_des_context(&des, c))
 		return (NULL);
 	f = ((c->flag & _E) == _E) ? &encode_block : &decode_block;
-	while ((status = set_u64_block(&(des.block), c->data, &pad_pkcs7)))
+	while ((status = set_u64_block(&(des.block),
+					((t_cipher_context *)c->data)->in_file->fd, &pad_pkcs7)))
 		(*f)(&des);
 	if (status != DONE)
 		c->e.no = SYS_ERROR;

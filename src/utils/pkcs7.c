@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include "ft_ssl_utils.h"
 
 void	pad_pkcs7(char *in, char *out, int in_len, int block_size)
 {

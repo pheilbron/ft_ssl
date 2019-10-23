@@ -61,5 +61,9 @@ uint32_t	md_pad_u8_to_u32(char *in, uint32_t *out, uint8_t type);
 uint64_t	md_pad_u8_to_u64(char *in, uint64_t *out, uint8_t type);
 uint64_t	rot_l(uint64_t x, uint8_t shift, uint8_t data_size);
 uint64_t	rot_r(uint64_t x, uint8_t shift, uint8_t data_size);
+uint64_t	safe_rot_l(uint64_t x, uint8_t shift, uint8_t data_size);
+uint64_t	safe_rot_r(uint64_t x, uint8_t shift, uint8_t data_size);
+void		pad_pkcs7(char *in, char *out, int in_len, int block_size);
+int			unpad_pkcs7(char *in, char *out, int block_size);
 
 #endif

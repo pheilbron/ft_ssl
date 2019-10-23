@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int	set_u64_block(uint64_t *out, t_ssl_context *c, (*pad)())
+int	set_u64_block(uint64_t *out, int fd, (*pad)())
 {
 	char	block_data[8];
 	int		size;
