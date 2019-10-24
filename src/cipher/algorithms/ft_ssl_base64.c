@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/21 15:46:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 17:07:50 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_ssl_error.h"
 #include "ft_ssl_options.h"
+#include "read_data.h"
 #include "ft_dstring.h"
 
 #define SHIFT_1 18
@@ -113,7 +114,7 @@ static void	decrypt_block(t_dstring *data_out, char *raw_data, int len)
 	}
 }
 
-char		*ft_ssl_base64(t_ssl_file *file)
+int			ft_ssl_base64(t_ssl_file *file, char *out)
 {
 	t_dstring	*data_out;
 	char		*raw_data;
@@ -132,10 +133,11 @@ char		*ft_ssl_base64(t_ssl_file *file)
 		else
 			decrypt_block(data_out, raw_data, read_size);
 	}
-	if (size < 0)
+	if (read_size < 0)
 	{
 		ft_ssl_new_error(&(file->e), SYS_ERROR, NULL);
-		return ((char *)print_fatal_error(file));
+		ft_error_print_std_message("ft_ssl", file->e);
+		return (NULL);
 	}
 	return (ft_dstr_release(data_out));
 }

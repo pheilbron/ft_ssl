@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/09/26 09:03:04 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/10/23 16:56:29 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,9 +37,10 @@ MD			= parse_message_digest process_message_digest print_message_digest \
 			  algorithms/ft_ssl_sha512 algorithms/ft_ssl_sha512_aux \
 			  algorithms/ft_ssl_sha512_224 algorithms/ft_ssl_sha512_256 \
 			  algorithms/ft_ssl_sha_utils
-CIPHER		= parse_cipher \
+CIPHER		= parse_cipher process_cipher \
 			  algorithms/ft_ssl_base64 \
 			  algorithms/u64_block \
+			  algorithms/ft_ssl_pbkdf \
 			  algorithms/des/ft_des_utils \
 			  algorithms/des/ft_ssl_des_cbc \
 			  algorithms/des/ft_ssl_des_cfb \
@@ -50,7 +51,9 @@ CIPHER		= parse_cipher \
 STANDARD	= parse_standard
 
 OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, \
+		$(SRC) \
 		$(patsubst %, utils/%, $(UTILS)) \
+		$(patsubst %, message_digest/%, $(MD)) \
 		$(patsubst %, cipher/%, $(CIPHER)) \
 		$(patsubst %, standard/%, $(STANDARD)))
 

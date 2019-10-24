@@ -6,9 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 12:09:37 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 12:21:38 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 16:52:47 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_ssl.h"
+#include "ft_ssl_options.h"
+#include "ft_ssl_des.h"
+#include "ft_ssl_utils.h"
 
 static void	encode_block(t_des_context *c)
 {
@@ -27,18 +32,25 @@ static void	encode_block(t_des_context *c)
 	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
-char	*ft_ssl_des_cbc(t_ssl_context *c)
+static void	decode_block(t_des_context *c)
 {
-	ft_des_context	des;
-	int				status;
-	void			(*f)();
+	c->block = 0;
+}
 
-	if (!init_des_context(&des, c))
-		return (NULL);
-	f = ((c->flag & _E) == _E) ? &encode_block : &decode_block;
-	while ((status = set_u64_bloc))
+int			ft_ssl_des_cbc(t_ssl_context *c, char **out)
+{
+	t_des_context	des;
+	int				status;
+	void			(*f)(t_des_context *);
+
+	if (!init_des_context(&des, (t_cipher_context *)(c->data)))
+		return ((c->e.no = SYS_ERROR));
+	f = ((c->options & _E) == _E) ? &encode_block : &decode_block;
+	while ((status = set_u64_block(&(des.block),
+					((t_cipher_context *)c->data)->in_file->fd, &pad_pkcs7)))
 		(*f)(&des);
 	if (status != DONE)
 		c->e.no = SYS_ERROR;
-	return (ft_dstr_release(des.out));
+	(*out) = ft_dstr_release(des.out);
+	return (1);
 }

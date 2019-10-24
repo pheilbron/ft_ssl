@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 15:41:21 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/05 13:25:12 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 16:47:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_dstring	*get_ssl_options(t_dstring *s, t_ssl_algorithm_type type)
 	int	i;
 
 	i = 0;
-	while (g_options_tab[i].name)
+	while (g_options_tab[i].op)
 	{
 		if (g_options_tab[i].type.algorithm.family == type.algorithm.family &&
 				(g_options_tab[i].type.algorithm.family != MD &&
@@ -32,7 +32,7 @@ t_dstring	*get_ssl_options(t_dstring *s, t_ssl_algorithm_type type)
 	return (s);
 }
 
-char		*get_ssl_command(t_ssl_algorithm type)
+char		*get_ssl_command(t_ssl_algorithm_type type)
 {
 	int	i;
 

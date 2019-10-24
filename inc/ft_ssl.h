@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/02 11:09:14 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 14:55:37 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 # include <stdint.h>
 # include "ft_ssl_error.h"
 # include "ft_queue.h"
+# include "ft_error.h"
 # include "ft_dstring.h"
 
 # define LITTLE_END 1
 # define LE 1
 # define BIG_END 2
 # define BE 2
+
+# define READ_BUF_SIZE 4096
 
 typedef	union	u_ssl_algorithm_type
 {

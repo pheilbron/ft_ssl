@@ -6,10 +6,11 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:34:59 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 12:35:04 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 16:28:57 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include "ft_ssl_sha_utils.h"
 
 uint32_t	u32_ch(uint32_t a, uint32_t b, uint32_t c)

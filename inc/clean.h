@@ -1,27 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_data.h                                        :+:      :+:    :+:   */
+/*   clean.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/09 10:49:07 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 10:53:34 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/10/23 14:06:53 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/10/23 14:08:15 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READ_DATA_H
-# define READ_DATA_H
+#ifndef CLEAN_H
+# define CLEAN_H
 
-# define BUF_SIZE 4096
-
-struct	s_holder
-{
-	char	buf[BUF_SIZE];
-	int		i;
-	int		len;
-};
-
-int	ft_ssl_read(int fd, char *buf, int size);
+int	ft_ssl_free_error(t_error *e);
+int	ft_ssl_free_file(t_ssl_file *file);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 14:08:43 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 13:42:49 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 15:40:46 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 
 typedef struct	s_sha512_chunk
 {
-	t_u32_md_block	block;
+	t_u64_md_block	block;
 	uint32_t		buf_len;
 	uint32_t		buf_pos;
 	uint64_t		s[80];

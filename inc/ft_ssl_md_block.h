@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:23:34 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 18:07:49 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 14:49:50 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_SSL_MD_BLOCK_H
 
 # include <stdint.h>
+# include "ft_ssl.h"
 
 # define DONE -1
 

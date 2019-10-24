@@ -6,12 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 14:37:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 16:48:31 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_ssl_error.h"
+#include "ft_ssl_options.h"
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_cipher.h"
 #include "ft_string.h"
@@ -36,27 +37,27 @@ t_ssl_algorithm	g_algo_tab[] =
 	{CIPHER | DES, "des-ecb", &ft_ssl_des_ecb, &process_cipher},
 	{CIPHER | DES, "des-ofb", &ft_ssl_des_ofb, &process_cipher},
 	{CIPHER | DES, "des-pcbc", &ft_ssl_des_pcbc, &process_cipher},
-	{CIPHER | AES, "aes128", &ft_ssl_aes128_ecb, &process_cipher},
-	{CIPHER | AES, "aes192", &ft_ssl_aes192_ecb, &process_cipher},
-	{CIPHER | AES, "aes256", &ft_ssl_aes256_ecb, &process_cipher},
-	{CIPHER | AES, "aes128-cbc", &ft_ssl_aes128_cbc, &process_cipher},
-	{CIPHER | AES, "aes128-cfb", &ft_ssl_aes128_cfb, &process_cipher},
-	{CIPHER | AES, "aes128-ctr", &ft_ssl_aes128_ctr, &process_cipher},
-	{CIPHER | AES, "aes128-ecb", &ft_ssl_aes128_ecb, &process_cipher},
-	{CIPHER | AES, "aes128-ofb", &ft_ssl_aes128_ofb, &process_cipher},
-	{CIPHER | AES, "aes128-pcbc", &ft_ssl_aes128_pcbc, &process_cipher},
-	{CIPHER | AES, "aes192-cbc", &ft_ssl_aes192_cbc, &process_cipher},
-	{CIPHER | AES, "aes192-cfb", &ft_ssl_aes192_cfb, &process_cipher},
-	{CIPHER | AES, "aes192-ctr", &ft_ssl_aes192_ctr, &process_cipher},
-	{CIPHER | AES, "aes192-ecb", &ft_ssl_aes192_ecb, &process_cipher},
-	{CIPHER | AES, "aes192-ofb", &ft_ssl_aes192_ofb, &process_cipher},
-	{CIPHER | AES, "aes192-pcbc", &ft_ssl_aes192_pcbc, &process_cipher},
-	{CIPHER | AES, "aes256-cbc", &ft_ssl_aes256_cbc, &process_cipher},
-	{CIPHER | AES, "aes256-cfb", &ft_ssl_aes256_cfb, &process_cipher},
-	{CIPHER | AES, "aes256-ctr", &ft_ssl_aes256_ctr, &process_cipher},
-	{CIPHER | AES, "aes256-ecb", &ft_ssl_aes256_ecb, &process_cipher},
-	{CIPHER | AES, "aes256-ofb", &ft_ssl_aes256_ofb, &process_cipher},
-	{CIPHER | AES, "aes256-pcbc", &ft_ssl_aes256_pcbc, &process_cipher},
+//	{CIPHER | AES, "aes128", &ft_ssl_aes128_ecb, &process_cipher},
+//	{CIPHER | AES, "aes192", &ft_ssl_aes192_ecb, &process_cipher},
+//	{CIPHER | AES, "aes256", &ft_ssl_aes256_ecb, &process_cipher},
+//	{CIPHER | AES, "aes128-cbc", &ft_ssl_aes128_cbc, &process_cipher},
+//	{CIPHER | AES, "aes128-cfb", &ft_ssl_aes128_cfb, &process_cipher},
+//	{CIPHER | AES, "aes128-ctr", &ft_ssl_aes128_ctr, &process_cipher},
+//	{CIPHER | AES, "aes128-ecb", &ft_ssl_aes128_ecb, &process_cipher},
+//	{CIPHER | AES, "aes128-ofb", &ft_ssl_aes128_ofb, &process_cipher},
+//	{CIPHER | AES, "aes128-pcbc", &ft_ssl_aes128_pcbc, &process_cipher},
+//	{CIPHER | AES, "aes192-cbc", &ft_ssl_aes192_cbc, &process_cipher},
+//	{CIPHER | AES, "aes192-cfb", &ft_ssl_aes192_cfb, &process_cipher},
+//	{CIPHER | AES, "aes192-ctr", &ft_ssl_aes192_ctr, &process_cipher},
+//	{CIPHER | AES, "aes192-ecb", &ft_ssl_aes192_ecb, &process_cipher},
+//	{CIPHER | AES, "aes192-ofb", &ft_ssl_aes192_ofb, &process_cipher},
+//	{CIPHER | AES, "aes192-pcbc", &ft_ssl_aes192_pcbc, &process_cipher},
+//	{CIPHER | AES, "aes256-cbc", &ft_ssl_aes256_cbc, &process_cipher},
+//	{CIPHER | AES, "aes256-cfb", &ft_ssl_aes256_cfb, &process_cipher},
+//	{CIPHER | AES, "aes256-ctr", &ft_ssl_aes256_ctr, &process_cipher},
+//	{CIPHER | AES, "aes256-ecb", &ft_ssl_aes256_ecb, &process_cipher},
+//	{CIPHER | AES, "aes256-ofb", &ft_ssl_aes256_ofb, &process_cipher},
+//	{CIPHER | AES, "aes256-pcbc", &ft_ssl_aes256_pcbc, &process_cipher},
 	{0, NULL, NULL, NULL, NULL}
 };
 

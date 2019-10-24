@@ -6,13 +6,16 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 16:05:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 13:30:23 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 15:36:57 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include "ft_ssl.h"
 #include "ft_ssl_message_digest.h"
+#include "ft_ssl_utils.h"
 #include "ft_ssl_sha256.h"
+#include "ft_ssl_md_block.h"
 #include "ft_string.h"
 
 uint32_t g_sha256_tab[] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
@@ -27,41 +30,13 @@ uint32_t g_sha256_tab[] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
 	0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f,
 	0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
-int	ft_ssl_sha256_file(t_ssl_file *file, char **hash)
-{
-	t_sha256_chunk	chunk;
-	int				status;
-
-	if (!init_u32_md_block(&(chunk.block), 16, 64))
-		return (0);
-	chunk.buf_pos = 0;
-	chunk.hash[A] = 0x6a09e667;
-	chunk.hash[B] = 0xbb67ae85;
-	chunk.hash[C] = 0x3c6ef372;
-	chunk.hash[D] = 0xa54ff53a;
-	chunk.hash[E] = 0x510e527f;
-	chunk.hash[F] = 0x9b05688c;
-	chunk.hash[G] = 0x1f83d9ab;
-	chunk.hash[H] = 0x5be0cd19;
-	while ((status = set_u32_md_block(&(chunk.block), file, BIG_ENDIAN)) > 0)
-	{
-		init_sha256_block_message_schedule(&chunk);
-		update_sha256_message_schedule(&chunk, ONLOAD);
-		compress_sha256_chunk(&chunk);
-		update_sha256_message_schedule(&chunk, OFFLOAD);
-	}
-	if (status == DONE && (*hash = malloc(sizeof(**hash) * (8 * 4 + 1))))
-		u32_be_to_u8(chunk.hash, hash, 8);
-	return (free_u32_md_block(&(chunk.block)));
-}
-
 int	ft_ssl_sha256_buffer(char *data, char **hash)
 {
 	t_sha256_chunk	chunk;
 
 	if (!init_u32_md_block(&(chunk.block), 16, 64))
 		return (0);
-	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, BIG_ENDIAN);
+	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, BIG_END);
 	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x6a09e667;
 	chunk.hash[B] = 0xbb67ae85;
@@ -73,13 +48,43 @@ int	ft_ssl_sha256_buffer(char *data, char **hash)
 	chunk.hash[H] = 0x5be0cd19;
 	while (chunk.buf_pos < chunk.buf_len)
 	{
-		init_sha256_block_message_schedule(&chunk);
+		init_sha256_message_schedule(&chunk);
 		update_sha256_message_schedule(&chunk, ONLOAD);
 		compress_sha256_chunk(&chunk);
 		update_sha256_message_schedule(&chunk, OFFLOAD);
 		chunk.buf_pos += 16;
 	}
 	if ((*hash = malloc(sizeof(**hash) * (8 * 4 + 1))))
-		u32_be_to_u8(chunk.hash, hash, 8);
+		u32_be_to_u8(chunk.hash, (uint8_t **)hash, 8);
+	return (free_u32_md_block(&(chunk.block)));
+}
+
+int	ft_ssl_sha256(void *data, char **hash, uint8_t type)
+{
+	t_sha256_chunk	chunk;
+	int				status;
+
+	if (type == MD_BUFFER)
+		return (ft_ssl_sha256_buffer(data, hash));
+	if (!init_u32_md_block(&(chunk.block), 16, 64))
+		return (0);
+	chunk.buf_pos = 0;
+	chunk.hash[A] = 0x6a09e667;
+	chunk.hash[B] = 0xbb67ae85;
+	chunk.hash[C] = 0x3c6ef372;
+	chunk.hash[D] = 0xa54ff53a;
+	chunk.hash[E] = 0x510e527f;
+	chunk.hash[F] = 0x9b05688c;
+	chunk.hash[G] = 0x1f83d9ab;
+	chunk.hash[H] = 0x5be0cd19;
+	while ((status = set_u32_md_block(&(chunk.block), data, BIG_END)) > 0)
+	{
+		init_sha256_message_schedule(&chunk);
+		update_sha256_message_schedule(&chunk, ONLOAD);
+		compress_sha256_chunk(&chunk);
+		update_sha256_message_schedule(&chunk, OFFLOAD);
+	}
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (8 * 4 + 1))))
+		u32_be_to_u8(chunk.hash, (uint8_t **)hash, 8);
 	return (free_u32_md_block(&(chunk.block)));
 }

@@ -6,11 +6,17 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 13:57:29 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 14:26:01 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 11:09:20 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	set_u64_block(uint64_t *out, int fd, (*pad)())
+#include <stdint.h>
+#include "ft_ssl.h"
+#include "ft_ssl_cipher.h"
+#include "read_data.h"
+#include "ft_error.h"
+
+int	set_u64_block(uint64_t *out, int fd, void (*pad)(char *, char *, int, int))
 {
 	char	block_data[8];
 	int		size;

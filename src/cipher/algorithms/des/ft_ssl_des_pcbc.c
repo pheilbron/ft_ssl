@@ -6,9 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 12:22:15 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 14:21:38 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 11:48:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_ssl.h"
+#include "ft_ssl_options.h"
+#include "ft_ssl_des.h"
+#include "ft_ssl_utils.h"
 
 static void	encode_block(t_des_context *c)
 {
@@ -29,16 +34,22 @@ static void	encode_block(t_des_context *c)
 	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
+static void	decode_block(t_des_context *c)
+{
+	c->block = 0;
+}
+
 char	*ft_ssl_des_pcbc(t_ssl_context *c)
 {
-	ft_des_context	des;
+	t_des_context	des;
 	int				status;
-	void			(*f)();
+	void			(*f)(t_des_context *);
 
-	if (!init_des_context(&des, c))
+	if (!init_des_context(&des, (t_cipher_context *)(c->data)))
 		return (NULL);
-	f = ((c->flag & _E) == _E) ? &encode_block : &decode_block;
-	while ((status = set_u64_bloc))
+	f = ((c->options & _E) == _E) ? &encode_block : &decode_block;
+	while ((status = set_u64_block(&(des.block),
+					((t_cipher_context *)c->data)->in_file->fd, &pad_pkcs7)))
 		(*f)(&des);
 	if (status != DONE)
 		c->e.no = SYS_ERROR;

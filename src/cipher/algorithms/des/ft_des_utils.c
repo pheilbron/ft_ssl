@@ -6,9 +6,17 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 11:50:20 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 11:19:29 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <stdint.h>
+#include <stdlib.h>
+#include "ft_ssl.h"
+#include "ft_ssl_cipher.h"
+#include "ft_ssl_des.h"
+#include "ft_ssl_utils.h"
+#include "ft_dstring.h"
 
 uint8_t	g_expansion_tab[48] = {
 	32, 1, 2, 3, 4, 5,

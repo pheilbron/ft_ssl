@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 14:19:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 15:11:30 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include "ft_ssl.h"
 #include "ft_ssl_message_digest.h"
+#include "ft_ssl_utils.h"
 #include "ft_ssl_md5.h"
 #include "ft_ssl_md_block.h"
 
@@ -103,10 +104,10 @@ int				ft_ssl_md5_file(t_ssl_file *file, char **hash)
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
-	while ((status = set_u32_md_block(&(chunk.block), file, LITTLE_ENDIAN)) > 0)
+	while ((status = set_u32_md_block(&(chunk.block), file, LITTLE_END)) > 0)
 		set_block(&chunk);
 	if (status == DONE && (*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
-		u32_le_to_u8(chunk.hash, hash, 4);
+		u32_le_to_u8(chunk.hash, (uint8_t **)hash, 4);
 	return (free_u32_md_block(&(chunk.block)));
 }
 
@@ -116,7 +117,7 @@ int				ft_ssl_md5_buffer(char *data, char **hash)
 
 	if (!init_u32_md_block(&(chunk.block), 16, 64))
 		return (0);
-	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, LITTLE_ENDIAN);
+	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, LITTLE_END);
 	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
@@ -128,6 +129,27 @@ int				ft_ssl_md5_buffer(char *data, char **hash)
 		chunk.buf_pos += 16;
 	}
 	if ((*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
-		u32_le_to_u8(chunk.hash, hash, 4);
+		u32_le_to_u8(chunk.hash, (uint8_t **)hash, 4);
+	return (free_u32_md_block(&(chunk.block)));
+}
+
+int				ft_ssl_md5(void *data, char **hash, uint8_t type)
+{
+	t_md5_chunk	chunk;
+	int			status;
+
+	if (type == MD_BUFFER)
+		return (ft_ssl_md5_buffer(data, hash));
+	if (!init_u32_md_block(&(chunk.block), 16, 64))
+		return (0);
+	chunk.buf_pos = 0;
+	chunk.hash[A] = 0x67452301;
+	chunk.hash[B] = 0xefcdab89;
+	chunk.hash[C] = 0x98badcfe;
+	chunk.hash[D] = 0x10325476;
+	while ((status = set_u32_md_block(&(chunk.block), data, LITTLE_END)) > 0)
+		set_block(&chunk);
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (4 * 4 + 1))))
+		u32_le_to_u8(chunk.hash, (uint8_t **)hash, 4);
 	return (free_u32_md_block(&(chunk.block)));
 }

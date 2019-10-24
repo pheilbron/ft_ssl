@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/18 09:44:32 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 16:42:45 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	parse_md_file(t_ssl_context *c, char **data, int i)
 	if ((file->fd = open(data[i], O_DIRECTORY)))
 	{
 		close(file->fd);
-		ft_ssl_new_error(&(file->e), DIRECTORY, data[i]);
+		ft_ssl_new_error(&(file->e), INV_DIR, data[i]);
 	}
 	else if ((file->fd = open(data[i], O_RDONLY)) < 0)
 		ft_ssl_new_error(&(file->e), INV_FILE, data[i]);

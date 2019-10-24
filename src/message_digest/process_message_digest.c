@@ -6,11 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 13:41:29 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/27 08:50:06 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 14:11:01 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
+#include "ft_ssl_message_digest.h"
+#include "clean.h"
 #include "ft_queue.h"
 
 void	process_message_digest(t_ssl_context *c)
@@ -23,11 +25,11 @@ void	process_message_digest(t_ssl_context *c)
 		file = (t_ssl_file *)(ft_queue_dequeue(c->data));
 		if (file->e.no >= 0)
 		{
-			if (\\is file)
-				(*(c->algorithm.file_f))(file, hash);
+			if (file->fd > 0)
+				(*(c->algorithm.f))(file, &hash, MD_FILE);
 			else
-				(*(c->algorithm.buffer_f))(file->reference, hash);
-			ft_ssl_md_print(hash, c);
+				(*(c->algorithm.f))(file->reference, &hash, MD_BUFFER);
+			ft_ssl_md_print(file, hash, c);
 			free(hash);
 		}
 		else

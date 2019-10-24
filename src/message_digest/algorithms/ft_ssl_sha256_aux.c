@@ -6,13 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 22:02:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 14:22:39 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 15:37:51 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl_sha256.h"
 #include "ft_ssl_utils.h"
-#include "ft_ssl_sha_aux.h"
+#include "ft_ssl_sha_utils.h"
 
 static uint32_t	message_schedule_sum(uint32_t message_schedule[64],
 		uint8_t offset, uint8_t type)

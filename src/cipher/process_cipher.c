@@ -1,27 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_data.h                                        :+:      :+:    :+:   */
+/*   process_cipher.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/09 10:49:07 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 10:53:34 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/10/23 16:49:11 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/10/23 16:56:05 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef READ_DATA_H
-# define READ_DATA_H
-
-# define BUF_SIZE 4096
-
-struct	s_holder
+void	process_cipher(t_ssl_context *c)
 {
-	char	buf[BUF_SIZE];
-	int		i;
-	int		len;
-};
-
-int	ft_ssl_read(int fd, char *buf, int size);
-
-#endif
+	c->options = 10;
+}
