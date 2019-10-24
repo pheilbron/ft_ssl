@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 12:09:37 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 16:52:47 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 20:03:31 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,14 @@ static void	decode_block(t_des_context *c)
 	c->block = 0;
 }
 
-int			ft_ssl_des_cbc(t_ssl_context *c, char **out)
+int			ft_ssl_des_cbc(void *data, char **out, uint8_t type)
 {
 	t_des_context	des;
 	int				status;
+	t_ssl_context	*c;
 	void			(*f)(t_des_context *);
 
+	c = (t_ssl_context *)data;
 	if (!init_des_context(&des, (t_cipher_context *)(c->data)))
 		return ((c->e.no = SYS_ERROR));
 	f = ((c->options & _E) == _E) ? &encode_block : &decode_block;

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 14:55:37 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 18:57:35 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct	s_ssl_algorithm
 {
 	t_ssl_algorithm_type	type;
 	char					*name;
-	void					(*f)();
+	int						(*f)(void *, char **, uint8_t);
 	void					(*process)();
 }				t_ssl_algorithm;
 

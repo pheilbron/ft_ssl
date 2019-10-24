@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 17:07:50 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/23 18:55:42 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ static void	decrypt_block(t_dstring *data_out, char *raw_data, int len)
 	}
 }
 
-int			ft_ssl_base64(t_ssl_file *file, char *out)
+int			ft_ssl_base64(void *data, char **out, uint8_t type)
 {
 	t_dstring	*data_out;
 	char		*raw_data;
@@ -127,12 +127,8 @@ int			ft_ssl_base64(t_ssl_file *file, char *out)
 	if (!(raw_data = malloc(sizeof(*raw_data) * (1 + block_size))))
 		return (NULL);
 	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))
-	{
-		if (block_size == 48)
-			encrypt_block(data_out, raw_data, read_size);
-		else
+		block_size == 48 ? encrypt_block(data_out, raw_data, read_size) :
 			decrypt_block(data_out, raw_data, read_size);
-	}
 	if (read_size < 0)
 	{
 		ft_ssl_new_error(&(file->e), SYS_ERROR, NULL);
