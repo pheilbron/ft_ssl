@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 15:11:30 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 10:51:33 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ int				ft_ssl_md5_buffer(char *data, char **hash)
 	return (free_u32_md_block(&(chunk.block)));
 }
 
-int				ft_ssl_md5(void *data, char **hash, uint8_t type)
+int				ft_ssl_md5(void *data, char **hash, uint16_t type)
 {
 	t_md5_chunk	chunk;
 	int			status;

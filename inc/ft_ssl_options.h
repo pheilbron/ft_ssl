@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/02 11:05:08 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 11:18:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define _K 64
 # define _O 128
 # define _V 256
+# define _B 512
 
 # define MD 1
 # define CIPHER 2

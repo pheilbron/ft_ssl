@@ -6,9 +6,11 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 16:49:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 16:56:05 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 11:42:59 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_ssl.h"
 
 void	process_cipher(t_ssl_context *c)
 {

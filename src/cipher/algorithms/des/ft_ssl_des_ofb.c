@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 12:30:18 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 11:47:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 10:48:41 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,20 @@ static void	decode_block(t_des_context *c)
 	c->block = 0;
 }
 
-char	*ft_ssl_des_ofb(t_ssl_context *c)
+int			ft_ssl_des_ofb(void *data, char **out, uint16_t flag)
 {
-	t_des_context	des;
-	int				status;
-	void			(*f)(t_des_context *);
+	t_cipher_context	*c;
+	t_des_context		des;
+	int					status;
+	void				(*f)(t_des_context *);
 
-	if (!init_des_context(&des, (t_cipher_context *)(c->data)))
-		return (NULL);
-	f = ((c->options & _E) == _E) ? &encode_block : &decode_block;
-	while ((status = set_u64_block(&(des.block),
-					((t_cipher_context *)c->data)->in_file->fd, &pad_pkcs7)))
+	c = (t_ssl_context *)data;
+	if (!init_des_context(&des, c))
+		return ((c->e.no = SYS_ERROR));
+	f = ((flag & _E) == _E) ? &encode_block : &decode_block;
+	while ((status = set_u64_block(&(des.block), c->in_file->fd, &pad_pkcs7)))
 		(*f)(&des);
-	if (status != DONE)
-		c->e.no = SYS_ERROR;
-	return (ft_dstr_release(des.out));
+	c->e.no = status != DONE ? SYS_ERROR : 1;
+	(*out) = ft_dstr_release(des.out);
+	return (c->e.no);
 }

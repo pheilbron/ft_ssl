@@ -6,12 +6,13 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 12:07:00 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 11:37:15 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ssl.h"
 #include "ft_ssl_error.h"
+#include "ft_ssl_options.h"
 #include "ft_stdio.h"
 #include "ft_printf.h"
 #include "ft_dstring.h"
@@ -33,46 +34,49 @@ t_error	g_error_tab[] =
 	{0, "", ""}
 };
 
-static void	print_commands(void)
+void	print_commands(void)
 {
 	t_dstring	*s;
 
 	if ((s = ft_dstr_init()))
 	{
 		ft_printf("\nStandard commands:\n%s",
-				get_ssl_commands(s, standard)->buf);
+				get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .reference = STANDARD })->buf);
 		s->pos = 0;
 		ft_printf("Message Digest commands:\n%s",
-				get_ssl_commands(s, message_digest)->buf);
+				get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .reference = MD })->buf);
 		s->pos = 0;
 		ft_printf("Cipher commands:\n%s",
-				get_ssl_commands(s, cipher)->buf);
+				get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .reference = CIPHER })->buf);
 	}
 	ft_dstr_free(s);
 }
 
 int			print_fatal_error(t_ssl_context c)
 {
-	ft_error_print_std_message("ft_ssl", c->e);
+	ft_error_print_std_message("ft_ssl", c.e);
 	if (c.e.no == INV_COMMAND || c.e.no == INV_OPTION)
 		print_usage(c);
 	return (0);
 }
 
-void		print_non_fatal_error(t_ssl_hash *hash)
+void		print_non_fatal_error(t_ssl_file *file, char *algorithm_name)
 {
 	t_dstring	*s;
 
 	file->fd = PARSE_ERROR;
 	s = ft_dstr_init();
-	if (file->e.no == INV_FILE || file->e.no == DIRECTORY)
+	if (file->e.no == INV_FILE || file->e.no == INV_DIR)
 		ft_dstr_addf(s, "ft_ssl: %s: %s: %s", algorithm_name,
 				file->e.data, (file->e.no == INV_FILE ?
 					"No such file or directory" : "Is a directory"));
 	else if (file->e.no == MISSING_ARG)
 		ft_dstr_addf(s, "ft_ssl: %s: option requires an argument -- s",
 				algorithm_name);
-	if (file->e.no == INV_FILE || file->e.no == DIRECTORY ||
+	if (file->e.no == INV_FILE || file->e.no == INV_DIR ||
 			file->e.no == MISSING_ARG)
 		ft_printf("%s\n", s->buf);
 	ft_dstr_free(s);

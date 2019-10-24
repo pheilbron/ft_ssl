@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 18:55:42 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 11:55:39 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,18 +114,20 @@ static void	decrypt_block(t_dstring *data_out, char *raw_data, int len)
 	}
 }
 
-int			ft_ssl_base64(void *data, char **out, uint8_t type)
+int			ft_ssl_base64(void *data, char **out, uint16_t type)
 {
 	t_dstring	*data_out;
 	char		*raw_data;
 	int			block_size;
 	int			read_size;
+	t_ssl_file	*file;
 
+	file = (t_ssl_file *)data;
 	if (!(data_out = ft_dstr_init()))
-		return (NULL);
-	block_size = (file->flag & _D) == _D ? 65 : 48;
+		return (SYS_ERROR);
+	block_size = (type & _D) == _D ? 65 : 48;
 	if (!(raw_data = malloc(sizeof(*raw_data) * (1 + block_size))))
-		return (NULL);
+		return (SYS_ERROR + 0 * ft_dstr_free(data_out));
 	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))
 		block_size == 48 ? encrypt_block(data_out, raw_data, read_size) :
 			decrypt_block(data_out, raw_data, read_size);
@@ -133,7 +135,8 @@ int			ft_ssl_base64(void *data, char **out, uint8_t type)
 	{
 		ft_ssl_new_error(&(file->e), SYS_ERROR, NULL);
 		ft_error_print_std_message("ft_ssl", file->e);
-		return (NULL);
+		return (SYS_ERROR);
 	}
-	return (ft_dstr_release(data_out));
+	(*out) = ft_dstr_release(data_out);
+	return (1);
 }

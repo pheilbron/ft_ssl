@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 12:47:56 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 15:15:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 10:51:43 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int			ft_ssl_sha1_buffer(char *data, char **hash)
 	return (free_u32_md_block(&(chunk.block)));
 }
 
-int				ft_ssl_sha1(void *data, char **hash, uint8_t type)
+int				ft_ssl_sha1(void *data, char **hash, uint16_t type)
 {
 	t_sha1_chunk	chunk;
 	int			status;

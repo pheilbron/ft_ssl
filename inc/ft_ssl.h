@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 13:36:05 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 18:57:35 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 11:40:27 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef	union	u_ssl_algorithm_type
 	{
 		uint16_t	family : 2;
 		uint16_t	algo : 14;
-	}			algorithm;
+	}			a;
 }				t_ssl_algorithm_type;
 
 typedef struct	s_ssl_file
@@ -49,7 +49,7 @@ typedef struct	s_ssl_algorithm
 {
 	t_ssl_algorithm_type	type;
 	char					*name;
-	int						(*f)(void *, char **, uint8_t);
+	int						(*f)(void *, char **, uint16_t);
 	void					(*process)();
 }				t_ssl_algorithm;
 
@@ -76,7 +76,7 @@ void			parse_message_digest(t_ssl_context *c, char **data, int len,
 		int *i);
 int				print_usage(t_ssl_context c);
 int				print_fatal_error(t_ssl_context c);
-void			print_non_fatal_error(t_ssl_file *file);
+void			print_non_fatal_error(t_ssl_file *file, char *algorithm_name);
 void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
 		t_error e);
 void			ft_ssl_error_init(t_error *e);

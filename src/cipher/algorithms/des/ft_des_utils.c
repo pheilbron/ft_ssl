@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 11:19:29 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 10:22:04 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,10 @@ uint8_t	g_subkey_permutation_tab2[] = {
 
 int	init_des_context(t_des_context *des, t_cipher_context *c)
 {
-	if (!(des = malloc(sizeof(*des))))
-		return (0);
 	if (!(des->out = ft_dstr_init()))
 		return (0);
 	des->key[0] = ft_ssl_des_pbkdf(c->key[0]);
-	return (0);
+	return (1);
 }
 
 void	setup_block(t_des_context *c, int pos, int len, char *s)

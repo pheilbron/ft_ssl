@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/06 12:05:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 16:28:26 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/24 10:52:57 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	ft_ssl_sha512_256_buffer(char *data, char **hash)
 	return (free_u64_md_block(&(chunk.block)));
 }
 
-int			ft_ssl_sha512_256(void *data, char **hash, uint8_t type)
+int			ft_ssl_sha512_256(void *data, char **hash, uint16_t type)
 {
 	t_sha512_chunk	chunk;
 	int				status;
