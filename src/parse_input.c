@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 14:00:11 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 11:05:28 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/10/28 10:16:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ t_ssl_algorithm	g_algo_tab[] =
 //	{{CIPHER | DES}, "des-ecb", &ft_ssl_des_ecb, &process_cipher},
 //	{{CIPHER | DES}, "des-ofb", &ft_ssl_des_ofb, &process_cipher},
 //	{{CIPHER | DES}, "des-pcbc", &ft_ssl_des_pcbc, &process_cipher},
+//	{{CIPHER | DES}, "des3", &ft_ssl_des3_ecb, &process_cipher},
+//	{{CIPHER | DES}, "des3-cbc", &ft_ssl_des3_cbc, &process_cipher},
+//	{{CIPHER | DES}, "des3-cfb", &ft_ssl_des3_cfb, &process_cipher},
+//	{{CIPHER | DES}, "des3-ctr", &ft_ssl_des3_ctr, &process_cipher},
+//	{{CIPHER | DES}, "des3-ecb", &ft_ssl_des3_ecb, &process_cipher},
+//	{{CIPHER | DES}, "des3-ofb", &ft_ssl_des3_ofb, &process_cipher},
+//	{{CIPHER | DES}, "des3-pcbc", &ft_ssl_des3_pcbc, &process_cipher},
 //	{{CIPHER | AES}, "aes128", &ft_ssl_aes128_ecb, &process_cipher},
 //	{{CIPHER | AES}, "aes192", &ft_ssl_aes192_ecb, &process_cipher},
 //	{{CIPHER | AES}, "aes256", &ft_ssl_aes256_ecb, &process_cipher},
