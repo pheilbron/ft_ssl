@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 19:19:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 10:46:10 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/04 10:34:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,17 @@ static void	encode_block(t_des_context *c)
 
 static void	decode_block(t_des_context *c)
 {
-	c->block = 0;
+	int	i;
+
+	i = 15;
+	scramble_des_block(&(c->block), g_final_permutation_tab);
+	c->left = c->block >> 32;
+	c->right = c->block & 0xFFFFFFFF;
+	while (i >= 0)
+		feistel_process(c, i--);
+	c->block = ((uint64_t)(c->right) << 32) | (uint64_t)(c->left);
+	scramble_des_block(&(c->block), g_init_permutation_tab);
+	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
 int			ft_ssl_des_ecb(void *data, char **out, uint64_t flag)
