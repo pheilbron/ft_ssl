@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 19:19:35 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 10:46:10 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/08 11:23:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	decode_block(t_des_context *c)
 	c->block = 0;
 }
 
-int			ft_ssl_des_ecb(void *data, char **out, uint64_t flag)
+int			ft_ssl_des3_ecb(void *data, char **out, uint64_t flag)
 {
 	t_cipher_context	*c;
 	t_des_context		des;
@@ -67,7 +67,11 @@ int			ft_ssl_des_ecb(void *data, char **out, uint64_t flag)
 		return ((c->e.no = SYS_ERROR));
 	f = ((flag & _E) == _E) ? &encode_block : &decode_block;
 	while ((status = set_u64_block(&(des.block), c->in_file->fd, &pad_pkcs7)))
-		(*f)(&des);
+	{
+		((flag & _E) == _E) ? encode_block(&des) : decode_block(&des);
+		((flag & _E) != _E) ? encode_block(&des) : decode_block(&des);
+		((flag & _E) == _E) ? encode_block(&des) : decode_block(&des);
+	}
 	c->e.no = status != DONE ? SYS_ERROR : 1;
 	(*out) = ft_dstr_release(des.out);
 	return (c->e.no);

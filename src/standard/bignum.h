@@ -1,34 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_sha_utils.c                                 :+:      :+:    :+:   */
+/*   bignum.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/17 12:34:59 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/06 17:03:02 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/11/07 13:11:11 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/11/07 13:53:11 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
-#include "ft_ssl_sha_utils.h"
+#ifndef BIGNUM_H
+# define BIGNUM_H
 
-uint32_t	u32_ch(uint32_t a, uint32_t b, uint32_t c)
+typedef struct	s_bignum_mini
 {
-	return ((a & b) ^ (~a & c));
-}
+	uint64_t	left;
+	uint64_t	right;
+}				t_bignum_mini;
 
-uint64_t	u64_ch(uint64_t a, uint64_t b, uint64_t c)
+typedef struct	t_bignum
 {
-	return ((a & b) ^ (~a & c));
-}
-
-uint32_t	u32_maj(uint32_t a, uint32_t b, uint32_t c)
-{
-	return ((a & b) ^ (a & c) ^ (b & c));
-}
-
-uint64_t	u64_maj(uint64_t a, uint64_t b, uint64_t c)
-{
-	return ((a & b) ^ (a & c) ^ (b & c));
-}
+	t_vector	*
