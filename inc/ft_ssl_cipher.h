@@ -25,6 +25,8 @@ typedef struct	s_cipher_context
 	char		*init_vect;
 	char		*key[3];
 	char		password[256];
+	uint16_t	flag;
+	t_error		e;
 }				t_cipher_context;
 
 int			ft_ssl_base64(void *data, char **out, uint16_t type);

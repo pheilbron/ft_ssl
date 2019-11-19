@@ -30,8 +30,23 @@ typedef struct	s_des_context
 	uint64_t	init_vector;
 }				t_des_context;
 
-extern uint8_t	g_init_permutation_tab[64];
-extern uint8_t	g_final_permutation_tab[64];
+extern uint8_t		g_init_permutation_tab[64];
+extern uint8_t		g_final_permutation_tab[64];
+extern t_tab_elem	g_des_encryptor_tab[6];
+extern t_tab_elem	g_des_decryptor_tab[6];
+
+void		ft_ssl_des_cbc_encrypt_block(t_des_context *c);
+void		ft_ssl_des_cfb_encrypt_block(t_des_context *c);
+void		ft_ssl_des_ctr_encrypt_block(t_des_context *c);
+void		ft_ssl_des_ecb_encrypt_block(t_des_context *c);
+void		ft_ssl_des_ofb_encrypt_block(t_des_context *c);
+void		ft_ssl_des_pcbc_encrypt_block(t_des_context *c);
+void		ft_ssl_des_cbc_decrypt_block(t_des_context *c);
+void		ft_ssl_des_cfb_decrypt_block(t_des_context *c);
+void		ft_ssl_des_ctr_decrypt_block(t_des_context *c);
+void		ft_ssl_des_ecb_decrypt_block(t_des_context *c);
+void		ft_ssl_des_ofb_decrypt_block(t_des_context *c);
+void		ft_ssl_des_pcbc_decrypt_block(t_des_context *c);
 
 int			init_des_context(t_des_context *des, t_cipher_context *c);
 void		setup_block(t_des_context *c, int pos, int len, char *s);

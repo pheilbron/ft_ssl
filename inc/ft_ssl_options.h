@@ -55,7 +55,12 @@
 # define MD_ALL 0b1111111100
 
 # define BASE64 1 << 2
-# define DES 1 << 3
+# define DES_CBC 1 << 3
+# define DES_CFB 1 << 4
+# define DES_CTR 1 << 5
+# define DES_ECB 1 << 6
+# define DES_OFB 1 << 7
+# define DES_PCBC 1 << 8
 
 typedef struct	s_ssl_option
 {

@@ -36,6 +36,12 @@ typedef	union	u_ssl_algorithm_type
 	}			a;
 }				t_ssl_algorithm_type;
 
+typedef struct	s_tab_elem
+{
+	uint16_t	flag;
+	void		(*f)();
+}				t_tab_elem;
+
 typedef struct	s_ssl_file
 {
 	int			fd;

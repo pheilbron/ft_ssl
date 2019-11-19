@@ -9,10 +9,10 @@
 * [Credits](#credits)
 
 ## Objective  
-The goal of libft is to build a library for personal use throughout the 42 Curriculum, at first replicating many of the functions of the C Standard Library, and then accumulating additional functionality as needed.
+The goal of ft\_ssl is to build a collection of cryptography tools, replicating some of the behaviors of OpenSSL.
 
 #### About 42  
-[42][42] is a free, non profit, project-based, peer-to-peer learning coding school. It originated in France and now has over 20 campuses all over the world. More information can be found [here][42] 
+[42][42] is a free, non profit, project-based, peer-to-peer learning coding school. It originated in France and now has over 20 campuses all over the world. More information can be found [here][42].
 
 ## Installation 
 Clone this repository.

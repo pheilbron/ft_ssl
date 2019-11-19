@@ -15,7 +15,7 @@
 #include "ft_ssl_des.h"
 #include "ft_ssl_utils.h"
 
-static void	encode_block(t_des_context *c)
+void	ft_ssl_des_cbc_encode_block(t_des_context *c)
 {
 	int	i;
 
@@ -32,25 +32,19 @@ static void	encode_block(t_des_context *c)
 	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
-static void	decode_block(t_des_context *c)
+void	ft_ssl_des_cbc_decode_block(t_des_context *c)
 {
-	c->block = 0;
-}
+	int	i;
 
-int			ft_ssl_des_cbc(void *data, char **out, uint16_t flag)
-{
-	t_cipher_context	*c;
-	t_des_context		des;
-	int					status;
-	void				(*f)(t_des_context *);
-
-	c = (t_cipher_context *)data;
-	if (!init_des_context(&des, c))
-		return ((c->e.no = SYS_ERROR));
-	f = ((flag & _E) == _E) ? &encode_block : &decode_block;
-	while ((status = set_u64_block(&(des.block), c->in_file->fd, &pad_pkcs7)))
-		(*f)(&des);
-	c->e.no = status != DONE ? SYS_ERROR : 1;
-	(*out) = ft_dstr_release(des.out);
-	return (c->e.no);
+	i = 15;
+	c->init_vector = c->block;
+	scramble_des_block(&(c->block), g_final_permutation_tab);
+	c->left = c->block >> 32;
+	c->right = c->block & 0xFFFFFFFF;
+	while (i >= 0)
+		feistel_process(c, i--);
+	c->block = ((uint64_t)(c->right) << 32) | (uint64_t)(c->left);
+	scramble_des_block(&(c->block), g_init_permutation_tab);
+	c->block ^= c->init_vector;
+	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
