@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 12:56:48 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:44:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int	init_des_context(t_des_context *des, t_cipher_context *c)
 {
 	if (!(des->out = ft_dstr_init()))
 		return (0);
+	if (!(c->salt))
+		//generate salt
 	if (ft_ssl_des_pbkdf(c->password, c->salt, &(des->key),
 				&(des->init_vector)) < 0)
 		return (0);
@@ -134,6 +136,7 @@ uint64_t	get_substitute_value(int i, uint8_t x)
 		row = 3;
 	return (g_substitution_tab[i][row][(x & 0x1e) >> 1]);
 }
+
 void	feistel_process(t_des_context *c, int round)
 {
 	int 		i;

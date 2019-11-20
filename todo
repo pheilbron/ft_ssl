@@ -1,4 +1,3 @@
 - salt generator
 - decode des
 - refactor header files, particularly frequently used structs
-- refactor t_ssl_algorithm_type
