@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/07 18:54:01 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/17 13:43:56 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:28:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include <stdint.h>
 # include "ft_ssl_md_block.h"
 
-#define A 0
-#define B 1
-#define C 2
-#define D 3
+# define A 0
+# define B 1
+# define C 2
+# define D 3
 
 typedef struct	s_md5_chunk
 {

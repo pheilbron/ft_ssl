@@ -6,7 +6,7 @@
 #    By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/08/29 17:20:30 by pheilbro          #+#    #+#              #
-#    Updated: 2019/10/23 16:56:29 by pheilbro         ###   ########.fr        #
+#    Updated: 2019/11/20 12:59:31 by pheilbro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ CIPHER		= parse_cipher process_cipher \
 			  algorithms/ft_ssl_base64 \
 			  algorithms/u64_block \
 			  algorithms/ft_ssl_pbkdf \
+			  algorithms/ft_ssl_des \
 			  algorithms/des/ft_des_utils \
 			  algorithms/des/ft_ssl_des_cbc \
 			  algorithms/des/ft_ssl_des_cfb \

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 11:18:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:26:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,53 +15,55 @@
 
 # include "ft_ssl.h"
 
-/***************************
-**     Shared Options     **
-***************************/
-# define _P 1
-# define _S 2
+# define OPTION_ON(spec, generic) (((spec) & (generic)) == (spec))
 
-/***************************
-** Message Digest Options **
-***************************/
-# define _Q 4
-# define _R 8
-# define IN 16
+# define _S_MD 1UL
 
-/** *********************** **
- **      Cipher Options     **
- ** *********************** **/
-# define _A 4
-# define _D 8
-# define _E 16
-# define _I 32
-# define _K 64
-# define _O 128
-# define _V 256
-# define _B 512
+# define _P_MD 1UL << 8
+# define _Q_MD 1UL << 9
+# define _R_MD 1UL << 10
+# define IN 1UL << 11
+
+# define _I_CIPHER 1UL
+# define _K_CIPHER 1UL << 1
+# define _O_CIPHER 1UL << 2
+# define _P_CIPHER 1UL << 3
+# define _S_CIPHER 1UL << 4
+# define _V_CIPHER 1UL << 5
+
+# define _A_CIPHER 1UL << 8
+# define _B_CIPHER 1UL << 9
+# define _D_CIPHER 1UL << 10
+# define _E_CIPHER 1UL << 11
+
+# define PAIR_OP_MASK 0xFF
 
 # define MD 1
 # define CIPHER 2
 # define STANDARD 3
 
-# define MD5 1 << 2
-# define SHA1 1 << 3
-# define SHA224 1 << 4
-# define SHA256 1 << 5
-# define SHA384 1 << 6
-# define SHA512 1 << 7
-# define SHA512_224 1 << 8
-# define SHA512_256 1 << 9
-# define MD_ALL 0b1111111100
+# define CBC 1
+# define CFB 2
+# define CTR 3
+# define ECB 4
+# define OFB 5
+# define PCBC 6
 
-# define BASE64 1 << 2
-# define DES_CBC 1 << 3
-# define DES_CFB 1 << 4
-# define DES_CTR 1 << 5
-# define DES_ECB 1 << 6
-# define DES_OFB 1 << 7
-# define DES_PCBC 1 << 8
-# define DES 0b111111100
+# define MD5 1
+# define SHA1 1 << 1
+# define SHA224 1 << 2
+# define SHA256 1 << 3
+# define SHA384 1 << 4
+# define SHA512 1 << 5
+# define SHA512_224 1 << 6
+# define SHA512_256 1 << 7
+# define WHIRLPOOL 1 << 8
+# define ALL_MD 0x1FF
+
+# define BASE64 1
+# define DES 1 << 1
+# define AES 1 << 2
+# define ALL_CIPHER 0x7
 
 typedef struct	s_ssl_option
 {

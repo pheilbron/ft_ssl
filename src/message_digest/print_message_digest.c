@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 13:51:20 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 14:23:28 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:37:44 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	ft_ssl_md_print(t_ssl_file *f, char *hash, t_ssl_context *c)
 {
 	char	*name;
 
-	if ((f->flag & _P) == _P)
+	if ((f->flag & _P_MD) == _P_MD)
 		ft_printf("%s%s\n", ((f->flag & IN) != IN) ? f->data : "", hash);
-	else if ((c->options & _Q) == _Q)
+	else if ((c->options & _Q_MD) == _Q_MD)
 		ft_printf("%s\n", hash);
-	else if ((c->options & _R) == _R)
+	else if ((c->options & _R_MD) == _R_MD)
 		ft_printf("%s %s%s%s\n", hash, f->reference ? "" : "\"",
 				(f->reference ? f->reference : f->data),
 				f->reference ? "" : "\"");

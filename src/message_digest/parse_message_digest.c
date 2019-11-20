@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 16:42:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:35:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	parse_md_stdin(t_ssl_context *c)
 	file->reference = ft_dstr_release(s);
 	file->data = file->reference;
 	file->e.no = 1;
-	file->flag = c->options | _P;
+	file->flag = c->options | _P_MD;
 	ft_queue_push(c->data, file);
 	return (file->e.no);
 }
@@ -59,7 +59,7 @@ static int	parse_md_file(t_ssl_context *c, char **data, int i)
 		file->reference = data[i];
 		file->e.no = 1;
 	}
-	file->flag = c->options & ~_P & ~_S;
+	file->flag = c->options & ~_P_MD & ~_S_MD;
 	ft_queue_enqueue(c->data, file);
 	return (file->e.no);
 }
@@ -75,12 +75,12 @@ static int	parse_md_string(t_ssl_context *c, char **data, int len, int *i)
 	file->fd = 0;
 	file->reference = data[(*i)++];
 	file->data = file->reference;
-	file->flag = (c->options & ~_P) | _S;
+	file->flag = (c->options & ~_P_MD) | _S_MD;
 	file->e.no = 1;
 	ft_queue_enqueue(c->data, file);
 	if ((*i < len && ft_strcmp("-s", data[*i]) != 0 &&
 				ft_strcmp("--string", data[*i]) != 0) || *i >= len)
-		c->options &= ~_S;
+		c->options &= ~_S_MD;
 	else if (*i < len)
 		(*i)++;
 	return (file->e.no);
@@ -100,9 +100,9 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 			if (set_ssl_option(c, data[*i][data_i++]) < 0)
 				return (c->e.no);
 		(*i)++;
-		if ((c->options & _S) == _S)
+		if ((c->options & _S_MD) == _S_MD)
 		{
-			while (((c->options & _S) == _S) &&
+			while (((c->options & _S_MD) == _S_MD) &&
 					parse_md_string(c, &(data[*i]), len, i) >= 0)
 				;
 			return (c->e.no = 1);
@@ -120,7 +120,7 @@ void		parse_message_digest(t_ssl_context *c, char **data, int len,
 		print_fatal_error(*c);
 	else if (parse_md_options(c, data, len, i) < 0)
 		print_fatal_error(*c);
-	else if ((c->options & _P) == _P)
+	else if ((c->options & _P_MD) == _P_MD)
 		parse_md_stdin(c);
 	while (*i < len && parse_md_file(c, data, *i) != SYS_ERROR)
 		(*i)++;

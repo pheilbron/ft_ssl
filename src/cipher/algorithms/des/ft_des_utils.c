@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 10:22:04 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:56:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,9 @@ int	init_des_context(t_des_context *des, t_cipher_context *c)
 {
 	if (!(des->out = ft_dstr_init()))
 		return (0);
-	des->key[0] = ft_ssl_des_pbkdf(c->key[0]);
+	if (ft_ssl_des_pbkdf(c->password, c->salt, &(des->key),
+				&(des->init_vector)) < 0)
+		return (0);
 	return (1);
 }
 

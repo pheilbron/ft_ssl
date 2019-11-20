@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 10:49:07 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 10:53:34 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:29:52 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ struct	s_holder
 	int		len;
 };
 
-int	ft_ssl_read(int fd, char *buf, int size);
+int		ft_ssl_read(int fd, char *buf, int size);
 
 #endif

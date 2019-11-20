@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 10:50:13 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:38:40 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,17 @@ static int	set_context(t_ssl_context *c, uint16_t op, char **data, int *i)
 	if (i)
 	{
 		(*i)++;
-		if (op == _I)
+		if (op == _I_CIPHER)
 			((t_cipher_context *)(c->data))->in_file->reference = data[1];
-		else if (op == _O)
+		else if (op == _O_CIPHER)
 			((t_cipher_context *)(c->data))->out_file->reference = data[1];
-		else if (op == _S)
+		else if (op == _S_CIPHER)
 			((t_cipher_context *)(c->data))->salt = data[1];
-		else if (op == _V)
+		else if (op == _V_CIPHER)
 			((t_cipher_context *)(c->data))->init_vect = data[1];
-		else if (op == _K)
+		else if (op == _K_CIPHER)
 			((t_cipher_context *)(c->data))->key[0] = data[1];
-		else if (op == _P)
+		else if (op == _P_CIPHER)
 			ft_strncpy(((t_cipher_context *)(c->data))->password, data[1], 256);
 		else
 			return (1);
@@ -169,8 +169,8 @@ void		parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 			print_fatal_error(*c);
 		else if (parse_cipher_options(c, data, len, i) < 0)
 			print_fatal_error(*c);
-		else if (((c->options & _I) == _I && init_in_file(c) < 0) ||
-					((c->options & _O) == _O && init_out_file(c) < 0))
+		else if (((c->options & _I_CIPHER) == _I_CIPHER && init_in_file(c) < 0) ||
+					((c->options & _O_CIPHER) == _O_CIPHER && init_out_file(c) < 0))
 			print_fatal_error(*c);
 		else if (parse_cipher_password(c, cipher) < 0)
 			print_fatal_error(*c);

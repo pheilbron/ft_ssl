@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/02 09:48:51 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 10:34:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:24:36 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define INV_FILE_CREATE -23
 # define INV_DIR_CREATE -24
 # define INV_DES_KEY -25
+# define INV_BLOCK_CIPHER_MODE -26
 
 # define PARSE_ERROR -1
 # define NO_DATA_MALLOC -2

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 21:10:19 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/04 21:33:43 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:26:28 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ typedef struct	s_whirlpool_chunk
 {
 	t_u64_md_block	block;
 	uint64_t		state[8];
+	uint64_t		temp[8];
+	uint64_t		key[8];
 }				t_whirlpool_chunk;
 
 #endif

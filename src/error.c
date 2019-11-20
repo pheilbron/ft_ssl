@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 11:37:15 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 11:31:03 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,14 @@ void	print_commands(void)
 
 	if ((s = ft_dstr_init()))
 	{
-		ft_printf("\nStandard commands:\n%s",
-				get_ssl_commands(s,
-					(t_ssl_algorithm_type){ .reference = STANDARD })->buf);
+		ft_printf("\nStandard commands:\n%s", get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .family = STANDARD })->buf);
 		s->pos = 0;
-		ft_printf("Message Digest commands:\n%s",
-				get_ssl_commands(s,
-					(t_ssl_algorithm_type){ .reference = MD })->buf);
+		ft_printf("Message Digest commands:\n%s", get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .family = MD })->buf);
 		s->pos = 0;
-		ft_printf("Cipher commands:\n%s",
-				get_ssl_commands(s,
-					(t_ssl_algorithm_type){ .reference = CIPHER })->buf);
+		ft_printf("Cipher commands:\n%s", get_ssl_commands(s,
+					(t_ssl_algorithm_type){ .family = CIPHER })->buf);
 	}
 	ft_dstr_free(s);
 }

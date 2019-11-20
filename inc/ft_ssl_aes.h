@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/22 13:03:12 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 13:53:20 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:28:50 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ typedef struct	s_aes_context
 	uint8_t		key_size;
 	uint64_t	round_key[15][4];
 	uint64_t	init_vect;
-}				t_des_context;
+}				t_aes_context;
 
 #endif
-

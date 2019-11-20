@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:14 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 11:55:39 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 12:47:30 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int			ft_ssl_base64(void *data, char **out, uint16_t type)
 	file = (t_ssl_file *)data;
 	if (!(data_out = ft_dstr_init()))
 		return (SYS_ERROR);
-	block_size = (type & _D) == _D ? 65 : 48;
+	block_size = (type & _D_CIPHER) == _D_CIPHER ? 65 : 48;
 	if (!(raw_data = malloc(sizeof(*raw_data) * (1 + block_size))))
 		return (SYS_ERROR + 0 * ft_dstr_free(data_out));
 	while ((read_size = ft_ssl_read(file->fd, raw_data, block_size)))

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/21 19:49:30 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/22 14:22:58 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:30:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	pad_pkcs7(char *in, char *out, int in_len, int block_size)
 		out[i++] = pad;
 }
 
-int	unpad_pkcs7(char *in, char *out, int block_size)
+int		unpad_pkcs7(char *in, char *out, int block_size)
 {
 	int		i;
 	char	pad;
