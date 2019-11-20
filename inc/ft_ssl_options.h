@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 13:26:25 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/20 13:58:51 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,13 @@
 
 # define BASE64 1
 # define DES 1 << 1
-# define AES 1 << 2
-# define ALL_CIPHER 0x7
+# define DES3 1 << 2
+# define AES128 1 << 3
+# define AES192 1 << 4
+# define AES256 1 << 5
+# define ALL_DES 0x6
+# define ALL_AES 0x70
+# define ALL_CIPHER 0x3F
 
 typedef struct	s_ssl_option
 {

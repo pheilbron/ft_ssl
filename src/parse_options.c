@@ -16,20 +16,20 @@
 
 t_ssl_option		g_options_tab[] =
 {
-    {'a', {CIPHER, DES | AES, 0}, _A_CIPHER, "base64"},
+    {'a', {CIPHER, ALL_DES | ALL_AES, 0}, _A_CIPHER, "base64"},
     {'b', {CIPHER, BASE64, 0}, _B_CIPHER, "break"},
     {'d', {CIPHER, ALL_CIPHER, 0}, _D_CIPHER, "decrypt"},
     {'e', {CIPHER, ALL_CIPHER, 0}, _E_CIPHER, "encrypt"},
     {'i', {CIPHER, ALL_CIPHER, 0}, _I_CIPHER, "input-file"},
-    {'k', {CIPHER, DES | AES, 0}, _K_CIPHER, "key"},
+    {'k', {CIPHER, ALL_DES | ALL_AES, 0}, _K_CIPHER, "key"},
     {'o', {CIPHER, ALL_CIPHER, 0}, _O_CIPHER, "output-file"},
     {'p', {MD, ALL_MD, 0}, _P_MD, "stdin"},
-    {'p', {CIPHER, DES | AES, 0}, _P_CIPHER, "password"},
+    {'p', {CIPHER, ALL_DES | ALL_AES, 0}, _P_CIPHER, "password"},
     {'q', {MD, ALL_MD, 0}, _Q_MD, "print-quiet"},
     {'r', {MD, ALL_MD, 0}, _R_MD, "print-reverse"},
     {'s', {MD, ALL_MD, 0}, _S_MD, "string"},
-    {'s', {CIPHER, DES | AES, 0}, _S_CIPHER, "salt"},
-    {'v', {CIPHER, DES | AES, 0}, _V_CIPHER, "init-vector"},
+    {'s', {CIPHER, ALL_DES | ALL_AES, 0}, _S_CIPHER, "salt"},
+    {'v', {CIPHER, ALL_DES | ALL_AES, 0}, _V_CIPHER, "init-vector"},
     {0, {0, 0, 0}, 0, 0}
 };
 
