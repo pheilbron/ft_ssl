@@ -22,8 +22,8 @@ t_dstring	*get_ssl_options(t_dstring *s, t_ssl_algorithm_type type)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].type.algorithm.family == type.algorithm.family &&
-				(g_options_tab[i].type.algorithm.family != MD &&
+		if (g_options_tab[i].type.family == type.family &&
+				(g_options_tab[i].type.family != MD &&
 					g_options_tab[i].op != 's'))
 				ft_dstr_add(s, &(g_options_tab[i].op), 1);
 		i++;
@@ -39,7 +39,7 @@ char		*get_ssl_command(t_ssl_algorithm_type type)
 	i = 0;
 	while (g_algo_tab[i].name)
 	{
-		if (g_algo_tab[i].type.algorithm.family == type.algorithm.family)
+		if (g_algo_tab[i].type.family == type.family)
 			return (g_algo_tab[i].name);
 		i++;
 	}
@@ -55,7 +55,7 @@ t_dstring	*get_ssl_commands(t_dstring *s, t_ssl_algorithm_type type)
 	s->pos = 0;
 	while (g_algo_tab[i].name)
 	{
-		if (g_algo_tab[i].type.algorithm.family == type.algorithm.family)
+		if (g_algo_tab[i].type.family == type.family)
 			ft_dstr_addf(s, "%s\n", g_algo_tab[i].name);
 		i++;
 	}

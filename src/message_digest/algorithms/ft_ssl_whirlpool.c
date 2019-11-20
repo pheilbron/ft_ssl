@@ -35,4 +35,18 @@ static uint64_t	pad_data(char *data, t_sha512_chunk *chunk)
 	return (chunk->len);
 }
 
+int	ft_ssl_whirlpool(void *data, char **hash, uint16_t type)
+{
+	t_whirlpool_chunk	chunk;
+	int					status;
 
+	if (type == MD_BUFFER)
+		return (ft_ssl_whirlpool_buffer(data, hash));
+	if (!init_u64_md_block(&(chunk.block), 16, 128))
+		return (0);
+	while ((status = set_u64_md_block(&(chunk.block), data, BIG_END)) > 0)
+		update_state(&chunk);
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (8 * 8 + 1))))
+		u64_be_to_u8(chunk.hash, (uint8_t **)hash, 8);
+	return (free_u64_md_block(&(chunk.block)));
+}

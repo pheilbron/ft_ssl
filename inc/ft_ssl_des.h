@@ -30,6 +30,13 @@ typedef struct	s_des_context
 	uint64_t	init_vector;
 }				t_des_context;
 
+typedef struct	s_encryptor_tab_elem
+{
+	uint16_t	flag;
+	void		(*encode)();
+	void		(*decode)();
+}				t_encryptor_tab_elem;
+
 extern uint8_t		g_init_permutation_tab[64];
 extern uint8_t		g_final_permutation_tab[64];
 extern t_tab_elem	g_des_encryptor_tab[6];

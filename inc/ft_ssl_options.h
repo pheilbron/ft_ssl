@@ -61,6 +61,7 @@
 # define DES_ECB 1 << 6
 # define DES_OFB 1 << 7
 # define DES_PCBC 1 << 8
+# define DES 0b111111100
 
 typedef struct	s_ssl_option
 {

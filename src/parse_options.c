@@ -40,12 +40,9 @@ int	set_ssl_option(t_ssl_context *c, char op)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].type.algorithm.family ==
-				c->algorithm.type.algorithm.family &&
-				g_options_tab[i].type.algorithm.algo ==
-				(c->algorithm.type.algorithm.algo &
-				   g_options_tab[i].type.algorithm.algo) &&
-				g_options_tab[i].op == op)
+		if (g_options_tab[i].type.family == c->algorithm.type.family &&
+				g_options_tab[i].type.algo == (c->algorithm.type.algo &
+				   g_options_tab[i].type.algo) && g_options_tab[i].op == op)
 		{
 			c->options |= g_options_tab[i].flag;
 			return (c->e.no = (int)g_options_tab[i].flag);
@@ -63,11 +60,9 @@ int	set_ssl_long_option(t_ssl_context *c, char *option)
 	i = 0;
 	while (g_options_tab[i].op)
 	{
-		if (g_options_tab[i].type.algorithm.family ==
-				c->algorithm.type.algorithm.family &&
-				g_options_tab[i].type.algorithm.algo ==
-				(c->algorithm.type.algorithm.algo &
-				   g_options_tab[i].type.algorithm.algo) &&
+		if (g_options_tab[i].type.family == c->algorithm.type.family &&
+				g_options_tab[i].type.algo == (c->algorithm.type.algo &
+				   g_options_tab[i].type.algo) &&
 				ft_strcmp(g_options_tab[i].long_op, option) == 0)
 		{
 			c->options |= g_options_tab[i].flag;

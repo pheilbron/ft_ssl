@@ -15,12 +15,8 @@
 
 typedef struct	s_whirlpool_chunk
 {
-	uint64_t	*data;
-	uint64_t	len;
-	uint64_t	pos;
-	uint8_t		w[8][8];
+	t_u64_md_block	block;
+	uint64_t		state[8];
 }				t_whirlpool_chunk;
-
-void			ft_ssl_whirlpool(char *data, uint32_t **file_hash);
 
 #endif

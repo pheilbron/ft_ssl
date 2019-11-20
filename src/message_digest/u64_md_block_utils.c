@@ -64,8 +64,7 @@ static int	u64_pad(t_u64_md_block **data, uint8_t type, int size_set)
 	i = size_set;
 	j = 0;
 	if ((*data)->padding < 0)
-		(*data)->padding = ((*data)->padding * -1) - 1; //finish
-	(*data)->padding *= (((*data)->padding) < 0 ? -1 : 1);
+		(*data)->padding = ((*data)->padding * -1);
 	while (i < (*data)->size && (*data)->padding > 0)
 	{
 		(*data)->data[i] = 0;
