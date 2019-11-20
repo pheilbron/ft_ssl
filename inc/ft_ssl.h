@@ -26,10 +26,13 @@
 
 # define READ_BUF_SIZE 4096
 
+typedef uint16_t	t_flag;
+
 typedef struct	s_ssl_algorithm_type
 {
-	uint16_t	family : 2;
-	uint16_t	algo : 14;
+	t_flag	family : 2;
+	t_flag	algo : 11;
+	t_flag	mode : 3;
 }				t_ssl_algorithm_type;
 
 typedef struct	s_ssl_file
