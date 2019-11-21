@@ -35,9 +35,9 @@ int				ft_ssl_des(void *data, char **out, uint16_t type);
 int				ft_ssl_des3(void *data, char **out, uint16_t type);
 
 int				ft_ssl_des_pbkdf(char *password, char *salt,
-		uint64_t *key[3], uint64_t *iv);
+		uint64_t (*key)[3], uint64_t *iv);
 int				ft_ssl_des3_pbkdf(char *password, char *salt,
-		uint64_t *key[3], uint64_t *iv);
+		uint64_t (*key)[3], uint64_t *iv);
 int				set_u64_block(uint64_t *out, int fd,
 		void (*pad)(char *, char *, int, int));
 

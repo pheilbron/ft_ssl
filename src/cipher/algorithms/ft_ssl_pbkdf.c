@@ -19,7 +19,8 @@
 // DES PASSWORD : MD5(PASSWORD || SALT); [:16] -> key, [16:] -> IV
 // DES3 PASSWORD : key = md5(pass || salt) + md5(md5(pass || salt) || pass || salt)[:16], IV = second half of second calculation
 
-int	ft_ssl_des_pbkdf(char *password, char *salt, uint64_t *key[3], uint64_t *iv)
+int	ft_ssl_des_pbkdf(char *password, char *salt,
+		uint64_t (*key)[3], uint64_t *iv)
 {
 	char	*pass_salt;
 	char	*key_iv;
@@ -33,13 +34,13 @@ int	ft_ssl_des_pbkdf(char *password, char *salt, uint64_t *key[3], uint64_t *iv)
 	ft_strcpy(pass_salt + pass_len, salt);
 	ft_ssl_md5(pass_salt, &key_iv, MD_BUFFER);
 	free(pass_salt);
-	u8_to_u64_be((uint8_t *)key_iv, key, 16);
+	u8_to_u64_be((uint8_t *)key_iv, (uint64_t **)key, 16);
 	u8_to_u64_be((uint8_t *)key_iv, &iv, 16);
 	return (1);
 }
 
 int	ft_ssl_des3_pbkdf(char *password, char *salt,
-		uint64_t *key[3], uint64_t *iv)
+		uint64_t (*key)[3], uint64_t *iv)
 {
 	char	*pass_salt;
 	char	*key_iv;
@@ -53,7 +54,7 @@ int	ft_ssl_des3_pbkdf(char *password, char *salt,
 	ft_strcpy(pass_salt + pass_len, salt);
 	ft_ssl_md5(pass_salt, &key_iv, MD_BUFFER);
 	free(pass_salt);
-	u8_to_u64_be((uint8_t *)key_iv, key, 48);
+	u8_to_u64_be((uint8_t *)key_iv, (uint64_t **)key, 48);
 	u8_to_u64_be((uint8_t *)key_iv, &iv, 16);
 	return (1);
 }

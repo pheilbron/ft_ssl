@@ -15,7 +15,7 @@
 #include "ft_ssl_des.h"
 #include "ft_ssl_utils.h"
 
-void	ft_ssl_des_ofb_encode_block(t_des_context *c)
+void	ft_ssl_des_ofb_encrypt_block(t_des_context *c)
 {
 	int			i;
 	uint64_t	plaintext;
@@ -35,7 +35,7 @@ void	ft_ssl_des_ofb_encode_block(t_des_context *c)
 	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
-void	ft_ssl_des_obf_decode_block(t_des_context *c)
+void	ft_ssl_des_ofb_decrypt_block(t_des_context *c)
 {
 	c->block = 0;
 }

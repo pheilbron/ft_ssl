@@ -12,7 +12,7 @@
 
 #include "ft_ssl_utils.h"
 
-int	u32_le_to_u8(uint32_t *in, uint8_t **out, uint8_t len)
+int	u64_le_to_u8(uint64_t *in, uint8_t **out, uint8_t len)
 {
 	uint8_t	i;
 

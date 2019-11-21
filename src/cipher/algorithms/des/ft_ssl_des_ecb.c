@@ -35,7 +35,7 @@ uint8_t g_final_permutation_tab[64] = {
 	34, 2, 42, 10, 50, 18, 58, 26,
 	33, 1, 41, 9, 49, 17, 57, 25};
 
-void	ft_ssl_des_ecb_encode_block(t_des_context *c)
+void	ft_ssl_des_ecb_encrypt_block(t_des_context *c)
 {
 	int	i;
 
@@ -50,7 +50,7 @@ void	ft_ssl_des_ecb_encode_block(t_des_context *c)
 	ft_dstr_add(c->out, (char *)(c->block), 16);
 }
 
-void	ft_ssl_des_ecb_decode_block(t_des_context *c)
+void	ft_ssl_des_ecb_decrypt_block(t_des_context *c)
 {
 	int	i;
 
