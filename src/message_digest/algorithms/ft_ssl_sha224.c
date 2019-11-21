@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/04 13:45:47 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/24 10:52:08 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/21 11:49:53 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static int	ft_ssl_sha224_buffer(char *data, char **hash)
 {
 	t_sha256_chunk	chunk;
 
-	if (!init_u32_md_block(&(chunk.block), 16, 64))
+	if (!init_u32_md_block(&(chunk.block), 16, 64, MD_BUFFER))
 		return (0);
-	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, BIG_END);
+	chunk.buf_len = md_pad_u8_to_u32(data, &chunk.block.data, BIG_END);
 	chunk.buf_pos = 0;
 	chunk.hash[A] = 0xc1059ed8;
 	chunk.hash[B] = 0x367cd507;
@@ -40,7 +40,7 @@ static int	ft_ssl_sha224_buffer(char *data, char **hash)
 		compress_sha256_chunk(&chunk);
 		update_sha256_message_schedule(&chunk, OFFLOAD);
 	}
-	if ((*hash = malloc(sizeof(**hash) * (7 * 4 + 1))))
+	if ((*hash = malloc(sizeof(**hash) * (7 * 8 + 1))))
 		u32_be_to_u8(chunk.hash, (uint8_t **)hash, 7);
 	return (free_u32_md_block(&(chunk.block)));
 }
@@ -52,7 +52,7 @@ int		ft_ssl_sha224(void *data, char **hash, uint16_t type)
 
 	if (type == MD_BUFFER)
 		return (ft_ssl_sha224_buffer(data, hash));
-	if (!init_u32_md_block(&(chunk.block), 16, 64))
+	if (!init_u32_md_block(&(chunk.block), 16, 64, MD_FILE))
 		return (0);
 	chunk.buf_pos = 0;
 	chunk.hash[A] = 0xc1059ed8;
@@ -70,7 +70,7 @@ int		ft_ssl_sha224(void *data, char **hash, uint16_t type)
 		compress_sha256_chunk(&chunk);
 		update_sha256_message_schedule(&chunk, OFFLOAD);
 	}
-	if (status == DONE && (*hash = malloc(sizeof(**hash) * (7 * 4 + 1))))
+	if (status == DONE && (*hash = malloc(sizeof(**hash) * (7 * 8 + 1))))
 		u32_be_to_u8(chunk.hash, (uint8_t **)hash, 7);
 	return (free_u32_md_block(&(chunk.block)));
 }

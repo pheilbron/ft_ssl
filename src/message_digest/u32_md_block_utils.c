@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:25:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 15:05:05 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/21 10:11:51 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 #include <unistd.h>
 #include "ft_ssl.h"
 #include "ft_ssl_md_block.h"
+#include "ft_ssl_message_digest.h"
 #include "ft_ssl_utils.h"
 #include "read_data.h"
 
 int			init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
-		short bit_len_size)
+		short bit_len_size, uint8_t type)
 {
 	short	i;
 
 	block->size = hash_size;
-	if (!(block->data = malloc(sizeof(*(block->data)) * block->size)))
+	if (type == MD_FILE && 
+			!(block->data = malloc(sizeof(*(block->data)) * block->size)))
 		return (0);
 	block->bit_len_size = bit_len_size / 32;
 	if (!(block->bit_len = malloc(sizeof(*(block->bit_len)) *

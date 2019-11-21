@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/01 15:46:23 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 12:34:07 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/21 10:21:48 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_ssl_free_error(t_error *e)
 
 int	ft_ssl_free_file(t_ssl_file *file)
 {
-	if (file->fd >= 0)
+	if (file->fd > 0)
 		free(file->reference);
 	if (file->data && file->fd != PARSE_ERROR &&
 			((file->flag & _S_MD) != _S_MD))

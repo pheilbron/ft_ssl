@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 11:34:36 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 12:35:48 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:42:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	parse_md_file(t_ssl_context *c, char **data, int i)
 
 	if (!(file = malloc(sizeof(*file))))
 		return (c->e.no = SYS_ERROR);
-	if ((file->fd = open(data[i], O_DIRECTORY)))
+	if ((file->fd = open(data[i], O_DIRECTORY)) >= 0)
 	{
 		close(file->fd);
 		ft_ssl_new_error(&(file->e), INV_DIR, data[i]);
@@ -103,7 +103,7 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 		if ((c->options & _S_MD) == _S_MD)
 		{
 			while (((c->options & _S_MD) == _S_MD) &&
-					parse_md_string(c, &(data[*i]), len, i) >= 0)
+					parse_md_string(c, data, len, i) >= 0)
 				;
 			return (c->e.no = 1);
 		}

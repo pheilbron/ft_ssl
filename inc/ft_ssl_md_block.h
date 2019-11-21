@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:23:34 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/10/23 14:49:50 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/21 10:13:07 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ typedef struct	s_u64_md_block
 }				t_u64_md_block;
 
 int				init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
-		short bit_len_size);
+		short bit_len_size, uint8_t type);
 int				init_u64_md_block(t_u64_md_block *block, uint8_t hash_size,
-		short bit_len_size);
+		short bit_len_size, uint8_t type);
 int				set_u32_md_block(t_u32_md_block *out, t_ssl_file *in,
 		uint8_t type);
 int				set_u64_md_block(t_u64_md_block *out, t_ssl_file *in,
