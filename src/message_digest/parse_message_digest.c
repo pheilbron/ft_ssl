@@ -114,6 +114,12 @@ static int	parse_md_options(t_ssl_context *c, char **data, int len, int *i)
 void		parse_message_digest(t_ssl_context *c, char **data, int len,
 		int *i)
 {
+	if (!(c->data = ft_queue_init()))
+	{
+		c->e.no = SYS_ERROR;
+		print_fatal_error(*c);
+		return ;
+	}
 	if (len == 1)
 		c->options |= IN;
 	if (len == 1 && parse_md_stdin(c) < 0)

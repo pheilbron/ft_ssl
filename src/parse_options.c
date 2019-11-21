@@ -42,7 +42,7 @@ int	set_ssl_option(t_ssl_context *c, char op)
 	{
 		if (g_options_tab[i].op == op &&
 				g_options_tab[i].type.family == c->algorithm.type.family &&
-				OPTION_ON(g_options_tab[i].type.algo, c->algorithm.type.algo))
+				OPTION_ON(c->algorithm.type.algo, g_options_tab[i].type.algo))
 		{
 			c->options |= g_options_tab[i].flag;
 			return (c->e.no = (int)g_options_tab[i].flag);
@@ -62,7 +62,7 @@ int	set_ssl_long_option(t_ssl_context *c, char *option)
 	{
 		if (ft_strcmp(g_options_tab[i].long_op, option) == 0 &&
 				g_options_tab[i].type.family == c->algorithm.type.family &&
-				OPTION_ON(g_options_tab[i].type.algo, c->algorithm.type.algo))
+				OPTION_ON(c->algorithm.type.algo, g_options_tab[i].type.algo))
 		{
 			c->options |= g_options_tab[i].flag;
 			return (c->e.no = (int)g_options_tab[i].flag);

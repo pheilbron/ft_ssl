@@ -61,7 +61,7 @@ OBJ			= $(patsubst %, $(OBJ_DIR)/%.o, \
 all: $(NAME)
 
 $(NAME): $(OBJ) ../libft/libft.a
-	@$(CC) $(CFLAGS) $(LIB) -o $@ $^
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(LIB) -o $@ $^
 
 ../libft/libft.a:
 	@make -sC libft
@@ -69,7 +69,7 @@ $(NAME): $(OBJ) ../libft/libft.a
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
 	@echo Compiling $<.
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(INC_FLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) -c $< -o $@
 
 debug: 
 	$(CC) $(FLAGS) $(DEBUG_FLAGS) $(INC_FLAGS) src/*.c \

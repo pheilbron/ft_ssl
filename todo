@@ -5,3 +5,4 @@
 - refactor header files, particularly frequently used structs
 - use strdup for all des inputs and make sure to free everything at other end
 - clean up the error and cleaning sections
+- init for md

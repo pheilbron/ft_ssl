@@ -110,19 +110,22 @@ int				ft_ssl_md5_file(t_ssl_file *file, char **hash)
 		u32_le_to_u8(chunk.hash, (uint8_t **)hash, 4);
 	return (free_u32_md_block(&(chunk.block)));
 }
-
+#include "ft_printf.h"
 int				ft_ssl_md5_buffer(char *data, char **hash)
 {
 	t_md5_chunk	chunk;
 
 	if (!init_u32_md_block(&(chunk.block), 16, 64))
 		return (0);
+	ft_printf("%s\n", data);
 	chunk.buf_len = md_pad_u8_to_u32(data, chunk.block.data, LITTLE_END);
 	chunk.buf_pos = 0;
 	chunk.hash[A] = 0x67452301;
 	chunk.hash[B] = 0xefcdab89;
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
+	for (uint32_t i = 0; i < chunk.buf_len; i++)
+		ft_printf("%.32b\n", chunk.block.data[i]);
 	while (chunk.buf_pos < chunk.buf_len)
 	{
 		set_block(&chunk);
