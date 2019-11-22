@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/09 08:47:48 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/09/11 18:38:01 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 12:37:23 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ int	ft_ssl_read(int fd, char *buf, int size)
 		if (ret > 0)
 			h.len = read(fd, h.buf, BUF_SIZE);
 	}
-	return (ret < 1 ? ret : total);
+	return (ret < 1 ? ret + total : total);
 }

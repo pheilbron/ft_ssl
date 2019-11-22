@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:26:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 12:10:30 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 12:36:25 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,9 @@
 # define U64_LE_SHIFT4R 56
 
 # define HEX "0123456789abcdef"
+
+#define U32_LE_PAD_ONE(x) (1UL << 31) >> ((3 - (x % 4)) * 8)
+#define U32_BE_PAD_ONE(x) (1UL << 31) >> ((x % 4) * 8)
 
 int			u32_be_to_u8(uint32_t *in, uint8_t **out, uint8_t len);
 int			u32_le_to_u8(uint32_t *in, uint8_t **out, uint8_t len);

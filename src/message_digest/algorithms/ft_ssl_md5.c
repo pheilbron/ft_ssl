@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:43:49 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 12:12:55 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 12:31:40 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int				ft_ssl_md5_buffer(char *data, char **hash)
 	return (free_u32_md_block(&(chunk.block)));
 }
 
+#include <stdio.h>
 int				ft_ssl_md5(void *data, char **hash, uint16_t type)
 {
 	t_md5_chunk	chunk;
@@ -148,7 +149,12 @@ int				ft_ssl_md5(void *data, char **hash, uint16_t type)
 	chunk.hash[C] = 0x98badcfe;
 	chunk.hash[D] = 0x10325476;
 	while ((status = set_u32_md_block(&(chunk.block), data, LITTLE_END)) > 0)
+	{
+		for (int i = 0; i < chunk.block.size; i++)
+			printf("%x\n", chunk.block.data[i]);
+		printf("\n");
 		set_block(&chunk);
+	}
 	if (status == DONE && (*hash = malloc(sizeof(**hash) * (4 * 8 + 1))))
 		u32_le_to_u8(chunk.hash, (uint8_t **)hash, 4);
 	return (free_u32_md_block(&(chunk.block)));
