@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:26:53 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 10:07:11 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 15:25:35 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 #define U64_LE_PAD_LEN2(x) (x / (ULLONG_MAX / 8) * 8)
 #define U64_BE_PAD_LEN1(x) (x / (ULLONG_MAX / 8) * 8)
 #define U64_BE_PAD_LEN2(x) (x * 8)
-
-#define U64_LE_PAD_ONE(x) (1ULL << 63) >> ((7 - (x % 8)) * 8)
-#define U64_BE_PAD_ONE(x) (1ULL << 63) >> ((x % 8) * 8)
 
 uint64_t	md_pad_u8_to_u64(char *in, uint64_t **out, uint8_t type)
 {

@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:25:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 13:47:27 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 15:24:18 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int			init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	block->bit_len_size = bit_len_size / 32;
 	if (!(block->bit_len = malloc(sizeof(*(block->bit_len)) *
 					block->bit_len_size)))
-		return (0);
+		return (free_u32_md_block(block) & 0);
 	i = 0;
 	while (i < block->bit_len_size)
 		block->bit_len[i++] = 0;
@@ -45,7 +45,7 @@ static void	u32_increment(uint32_t **bit_len, uint8_t bit_len_size,
 	uint8_t	i;
 
 	i = 0;
-	while (i < bit_len_size && (uint32_t)((*bit_len)[i] + size) < size)
+	while (i < bit_len_size && (uint32_t)((*bit_len)[i] + size * 8) < (size * 8))
 		i++;
 	if (i >= bit_len_size)
 		i--;
@@ -55,7 +55,7 @@ static void	u32_increment(uint32_t **bit_len, uint8_t bit_len_size,
 		while (i > 0)
 			(*bit_len)[i--] = 0;
 	}
-	(*bit_len)[i] += size;
+	(*bit_len)[i] += size * 8;
 }
 
 static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
@@ -74,7 +74,7 @@ static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
 					(*data)->bit_len_size * 32 + 8) * -1) % ((*data)->size * 32);
 		(*data)->data[i++] += (type == LE ? U32_LE_PAD_ONE(size_set) :
 				U32_BE_PAD_ONE(size_set));
-		(*data)->padding -= (*data)->padding % 32;
+		(*data)->padding -= ((*data)->padding % 32);
 	}
 	while (i < (*data)->size && (*data)->padding > 0)
 	{
@@ -84,7 +84,7 @@ static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
 	}
 	while (i < (*data)->size)
 	{
-		(*data)->data[i] = (*data)->bit_len[type == BIG_END ? j :
+		(*data)->data[i] = (*data)->bit_len[type == LITTLE_END ? j :
 			(*data)->bit_len_size - j - 1];
 		i++;
 		j++;

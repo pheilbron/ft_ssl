@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:26:45 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 10:18:58 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 15:25:31 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,10 @@
 #include "ft_ssl_utils.h"
 #include "ft_string.h"
 
-#define U32_LE_PAD_LEN1(x) (uint32_t)(x * 8) / (1ULL << 32)
-#define U32_LE_PAD_LEN2(x) (uint32_t)(x * 8) % (1ULL << 32)
-#define U32_BE_PAD_LEN1(x) (uint32_t)(x * 8) % (1ULL << 32)
-#define U32_BE_PAD_LEN2(x) (uint32_t)(x * 8) / (1ULL << 32)
-
-#define U32_LE_PAD_ONE(x) (1UL << 31) >> ((3 - (x % 4)) * 8)
-#define U32_BE_PAD_ONE(x) (1UL << 31) >> ((x % 4) * 8)
+#define U32_LE_PAD_LEN1(x) (uint32_t)(x * 8) % (1ULL << 32)
+#define U32_LE_PAD_LEN2(x) (uint32_t)(x * 8) / (1ULL << 32)
+#define U32_BE_PAD_LEN1(x) (uint32_t)(x * 8) / (1ULL << 32)
+#define U32_BE_PAD_LEN2(x) (uint32_t)(x * 8) % (1ULL << 32)
 
 uint32_t	md_pad_u8_to_u32(char *in, uint32_t **out, uint8_t type)
 {

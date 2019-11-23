@@ -6,3 +6,4 @@
 - use strdup for all des inputs and make sure to free everything at other end
 - clean up the error and cleaning sections
 - fix print for md
+- fix clean for files, and md_blocks

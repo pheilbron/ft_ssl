@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 12:27:23 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 12:04:33 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 15:32:19 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ int	u64_le_to_u8(uint64_t *in, uint8_t **out, uint8_t len)
 		(*out)[(i * 16) + 15] = HEX[(in[i] & U64_LE_DIGIT4R) >> U64_LE_SHIFT4R];
 		i++;
 	}
-	(*out)[i * 8] = '\0';
+	(*out)[i * 16] = '\0';
 	return (len);
 }

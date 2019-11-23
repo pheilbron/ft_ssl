@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:27:18 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/21 10:14:45 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 15:24:42 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,19 @@ int	init_u64_md_block(t_u64_md_block *block, uint8_t hash_size,
 	short	i;
 
 	block->size = hash_size;
+	block->data = NULL;
+	block->bit_len = NULL;
 	if (type == MD_FILE &&
 			!(block->data = malloc(sizeof(*(block->data)) * block->size)))
 		return (0);
 	block->bit_len_size = bit_len_size / 64;
 	if (!(block->bit_len = malloc(sizeof(*(block->bit_len)) *
 					block->bit_len_size)))
-		return (0);
+		return (free_u64_md_block(block) & 0);
 	i = 0;
 	while (i < block->bit_len_size)
 		block->bit_len[i++] = 0;
-	block->padding = -1 * bit_len_size;
+	block->padding = hash_size * 64 * -2;
 	return (1);
 }
 
@@ -45,7 +47,7 @@ static void	u64_increment(uint64_t **bit_len, uint8_t bit_len_size,
 	uint8_t	i;
 
 	i = 0;
-	while (i < bit_len_size && (uint64_t)((*bit_len)[i] + size) < size)
+	while (i < bit_len_size && (uint64_t)((*bit_len)[i] + size * 8) < (size * 8))
 		i++;
 	if (i >= bit_len_size)
 		i--;
@@ -55,7 +57,7 @@ static void	u64_increment(uint64_t **bit_len, uint8_t bit_len_size,
 		while (i > 0)
 			(*bit_len)[i--] = 0;
 	}
-	(*bit_len)[i] += size;
+	(*bit_len)[i] += size * 8;
 }
 
 static int	u64_pad(t_u64_md_block **data, uint8_t type, int size_set)
@@ -63,10 +65,19 @@ static int	u64_pad(t_u64_md_block **data, uint8_t type, int size_set)
 	int	i;
 	int	j;
 
-	i = size_set;
+	i = size_set / 8;
 	j = 0;
+	if (size_set % 8 == 0)
+		(*data)->data[i] = 0;
 	if ((*data)->padding < 0)
-		(*data)->padding = ((*data)->padding * -1);
+	{
+		(*data)->padding = (((*data)->padding + (size_set * 8) +
+					((size_set * 8 + 8) % 64) +
+					(*data)->bit_len_size * 64 + 8) * -1) % ((*data)->size * 64);
+		(*data)->data[i++] += (type == LE ? U64_LE_PAD_ONE(size_set) :
+				U64_BE_PAD_ONE(size_set));
+		(*data)->padding -= ((*data)->padding % 64);
+	}
 	while (i < (*data)->size && (*data)->padding > 0)
 	{
 		(*data)->data[i] = 0;
@@ -75,7 +86,7 @@ static int	u64_pad(t_u64_md_block **data, uint8_t type, int size_set)
 	}
 	while (i < (*data)->size)
 	{
-		(*data)->data[i] = (*data)->bit_len[type == BIG_END ? j :
+		(*data)->data[i] = (*data)->bit_len[type == LITTLE_END ? j :
 			(*data)->bit_len_size - j - 1];
 		i++;
 		j++;
@@ -93,19 +104,20 @@ int			set_u64_md_block(t_u64_md_block *out, t_ssl_file *in, uint8_t type)
 		close(in->fd);
 		return ((out->padding = DONE));
 	}
-	if (((size = ft_ssl_read(in->fd, data, out->size * 8)) == (int)out->size) &&
+	if (((size = ft_ssl_read(in->fd, data, out->size * 8)) > 0) &&
 			out->padding < 0)
 	{
 		type == BIG_END ? u8_to_u64_be((uint8_t *)data, &(out->data), size) :
 			u8_to_u64_le((uint8_t *)data, &(out->data), size);
 		u64_increment(&(out->bit_len), out->bit_len_size, size);
-		return (size);
+		if (size == (int)(out->size * 8))
+			return (size);
 	}
 	else if (size == -1)
 		return (SYS_ERROR);
-	if (out->padding > 0 || size < out->size)
+	if (out->padding > 0 || size < (int)(out->size * 8))
 		return (u64_pad(&out, type, size));
-	return (out->padding);
+	return (out->padding * -1);
 }
 
 int	free_u64_md_block(t_u64_md_block *block)

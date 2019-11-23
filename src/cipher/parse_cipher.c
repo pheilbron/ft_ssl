@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 12:38:40 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 16:38:52 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,9 +165,7 @@ void		parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 	if ((cipher = malloc(sizeof(*cipher))))
 	{
 		c->data = cipher;
-		if (len == 1 && parse_cipher_stdin(c) < 0)
-			print_fatal_error(*c);
-		else if (parse_cipher_options(c, data, len, i) < 0)
+		if (parse_cipher_options(c, data, len, i) < 0)
 			print_fatal_error(*c);
 		else if (((c->options & _I_CIPHER) == _I_CIPHER && init_in_file(c) < 0) ||
 					((c->options & _O_CIPHER) == _O_CIPHER && init_out_file(c) < 0))
