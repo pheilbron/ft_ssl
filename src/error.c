@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 11:31:03 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 19:31:08 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ void	print_commands(void)
 
 	if ((s = ft_dstr_init()))
 	{
-		ft_printf("\nStandard commands:\n%s", get_ssl_commands(s,
+		ft_printf("\nStandard commands:\n%s\n", get_ssl_commands(s,
 					(t_ssl_algorithm_type){ .family = STANDARD })->buf);
 		s->pos = 0;
-		ft_printf("Message Digest commands:\n%s", get_ssl_commands(s,
+		ft_printf("Message Digest commands:\n%s\n", get_ssl_commands(s,
 					(t_ssl_algorithm_type){ .family = MD })->buf);
 		s->pos = 0;
-		ft_printf("Cipher commands:\n%s", get_ssl_commands(s,
+		ft_printf("Cipher commands:\n%s\n", get_ssl_commands(s,
 					(t_ssl_algorithm_type){ .family = CIPHER })->buf);
 	}
 	ft_dstr_free(s);
@@ -55,7 +55,9 @@ void	print_commands(void)
 int			print_fatal_error(t_ssl_context c)
 {
 	ft_error_print_std_message("ft_ssl", c.e);
-	if (c.e.no == INV_COMMAND || c.e.no == INV_OPTION)
+	if (c.e.no == INV_COMMAND)
+		print_commands();
+	if (c.e.no == INV_OPTION)
 		print_usage(c);
 	return (0);
 }
