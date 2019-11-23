@@ -1,31 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   random.c                                           :+:      :+:    :+:   */
+/*   ssl_file.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/22 22:08:25 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 22:10:02 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/11/22 21:19:30 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/11/22 21:33:32 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
 #include <stdlib.h>
 #include "ft_ssl.h"
-#include "read_data.h"
+#include "ft_ssl_file.h"
+#include "ft_error.h"
 
-char	*nrandom(size_t n)
+t_ssl_file	*init_ssl_file(void)
 {
-	char	*ret;
-	int		fd;
+	t_ssl_file	*file;
 
-	if (!(fd = open("/dev/urandom", O_RDONLY)))
+	if (!(file = malloc(sizeof(*file))))
 		return (NULL);
-	if (!(ret = malloc(sizeof(*ret) * (n + 1))))
-		return (NULL);
-	if (ft_ssl_read(fd, ret, n) > 0)
-		return (ret);
-	free(ret);
-	return (NULL);
+	file->fd = 0;
+	file->reference = NULL;
+	file->data = NULL;
+	file->flag = 0;
+	init_ssl_error(&(file->e));
+	return (file);
+}
+
+int			clean_ssl_file(t_ssl_file *file)
+{
+	if (file->reference && file->fd > 0)
+		free(file->reference);
+	if (file->data && file->fd != PARSE_ERROR)
+		free(file->data);
+	free(file);
+	return (1);
 }

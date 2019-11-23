@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 11:23:22 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 19:31:08 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 21:32:28 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,12 @@ void		print_non_fatal_error(t_ssl_file *file, char *algorithm_name)
 			file->e.no == MISSING_ARG)
 		ft_printf("%s\n", s->buf);
 	ft_dstr_free(s);
+}
+
+void		init_ssl_error(t_error *e)
+{
+	e->no = 0;
+	e->data = NULL;
 }
 
 void		ft_ssl_error_init(t_error *e)

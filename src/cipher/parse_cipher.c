@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 16:53:42 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 21:50:59 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,45 +71,75 @@ static int	parse_cipher_options(t_ssl_context *c, char **data, int len, int *i)
 	return (c->e.no = 1);
 }
 
-static int	init_in_file(t_ssl_context *c)
+static int	init_file(t_ssl_context *c, t_cipher_context *cipher, uint8_t type)
 {
 	t_ssl_file	*file;
 	struct stat	entry;
 
-	file = ((t_cipher_context *)(c->data))->in_file;
-	if (*(file->reference) == '-')
-		file->fd = 0;
+	file = type == IN_FILE ? cipher->in_file : cipher->out_file;
+	if (file->fd == 1)
+	{
+		file->reference = ft_strndup("-", 1);
+		return (c->e.no = 1);
+	}
 	if (stat(file->reference, &entry) == 0)
 	{
 		if (S_ISDIR(entry.st_mode))
-			return (ft_ssl_new_error(&(c->e), INV_DIR, file->reference));
-		if ((S_IRUSR & entry.st_mode) != S_IRUSR)
+			return (ft_ssl_new_error(&(c->e), type == IN_FILE ?
+						INV_DIR : INV_DIR_CREATE, file->reference));
+		if ((type == IN_FILE) && (S_IRUSR & entry.st_mode) != S_IRUSR)
 			return (ft_ssl_new_error(&(c->e), INV_FILE_OPEN, file->reference));
-		if ((file->fd = open(file->reference, O_RDONLY)) < 0)
+		if ((type == IN_FILE) &&
+				(file->fd = open(file->reference, O_RDONLY)) < 0)
 			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
-	}
-	return (c->e.no = SYS_ERROR);
-}
-
-static int	init_out_file(t_ssl_context *c)
-{
-	t_ssl_file	*file;
-	struct stat	entry;
-
-	file = ((t_cipher_context *)(c->data))->out_file;
-	if (*(file->reference) == '-')
-		file->fd = 1;
-	if (stat(file->reference, &entry) == 0)
-	{
-		if (S_ISDIR(entry.st_mode))
-			return (ft_ssl_new_error(&(c->e), INV_DIR_CREATE, file->reference));
-		if ((S_IWUSR & entry.st_mode) != S_IWUSR)
+		if ((type != IN_FILE) && (S_IWUSR & entry.st_mode) != S_IWUSR)
 			return (ft_ssl_new_error(&(c->e), INV_FILE_CREATE, file->reference));
-		if ((file->fd = open(file->reference, O_CREAT | O_WRONLY, 0644)) < 0)
+		if ((type != IN_FILE) && (file->fd =
+					open(file->reference, O_CREAT | O_WRONLY, 0644)) < 0)
 			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
 	}
 	return (c->e.no = SYS_ERROR);
 }
+
+//static int	init_in_file(t_ssl_context *c)
+//{
+//	t_ssl_file	*file;
+//	struct stat	entry;
+//
+//	file = ((t_cipher_context *)(c->data))->in_file;
+//	if (*(file->reference) == '-')
+//		file->fd = 0;
+//	if (stat(file->reference, &entry) == 0)
+//	{
+//		if (S_ISDIR(entry.st_mode))
+//			return (ft_ssl_new_error(&(c->e), INV_DIR, file->reference));
+//		if ((S_IRUSR & entry.st_mode) != S_IRUSR)
+//			return (ft_ssl_new_error(&(c->e), INV_FILE_OPEN, file->reference));
+//		if ((file->fd = open(file->reference, O_RDONLY)) < 0)
+//			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
+//	}
+//	return (c->e.no = SYS_ERROR);
+//}
+//
+//static int	init_out_file(t_ssl_context *c)
+//{
+//	t_ssl_file	*file;
+//	struct stat	entry;
+//
+//	file = ((t_cipher_context *)(c->data))->out_file;
+//	if (*(file->reference) == '-')
+//		file->fd = 1;
+//	if (stat(file->reference, &entry) == 0)
+//	{
+//		if (S_ISDIR(entry.st_mode))
+//			return (ft_ssl_new_error(&(c->e), INV_DIR_CREATE, file->reference));
+//		if ((S_IWUSR & entry.st_mode) != S_IWUSR)
+//			return (ft_ssl_new_error(&(c->e), INV_FILE_CREATE, file->reference));
+//		if ((file->fd = open(file->reference, O_CREAT | O_WRONLY, 0644)) < 0)
+//			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
+//	}
+//	return (c->e.no = SYS_ERROR);
+//}
 
 //static int	parse_cipher_stdin(t_ssl_context *c)
 //{
@@ -132,7 +162,7 @@ static int	init_out_file(t_ssl_context *c)
 //	return (file->e.no);
 //}
 
-int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
+static int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
 {
 	t_dstring	*s;
 	char		v_pass[256];
@@ -140,12 +170,10 @@ int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
 	if (!(s = ft_dstr_init()))
 		return (c->e.no = SYS_ERROR);
 	ft_dstr_addf(s, "enter %s encryption password:", c->algorithm.name);
-	if (readpassphrase(s->buf, cipher->password, sizeof(cipher->password),
-				RPP_STDIN))
+	if (readpassphrase(s->buf, cipher->password, sizeof(cipher->password), 0))
 	{
 		ft_dstr_insert(s, "Verifying - ", 12, 0);
-		if (readpassphrase(s->buf, v_pass, sizeof(v_pass),
-					RPP_STDIN))
+		if (readpassphrase(s->buf, v_pass, sizeof(v_pass), 0))
 		{
 			ft_dstr_free(s);
 			if (ft_strcmp(cipher->password, v_pass) != 0)
@@ -158,24 +186,23 @@ int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
 	return (c->e.no = SYS_ERROR);
 }
 
-void		parse_cipher(t_ssl_context *c, char **data, int len, int *i)
+int			parse_cipher(t_ssl_context *c, char **data, int len, int *i)
 {
 	t_cipher_context	*cipher;
 
-	if ((cipher = malloc(sizeof(*cipher))))
+	if (!(cipher = init_cipher_context()))
 	{
-		c->data = cipher;
-		if (parse_cipher_options(c, data, len, i) < 0)
-			print_fatal_error(*c);
-		else if (((c->options & _I_CIPHER) == _I_CIPHER && init_in_file(c) < 0) ||
-					((c->options & _O_CIPHER) == _O_CIPHER && init_out_file(c) < 0))
-			print_fatal_error(*c);
-		else if (parse_cipher_password(c, cipher) < 0)
-			print_fatal_error(*c);
+		ft_ssl_new_error(&(c->e), SYS_ERROR, "");
+		return (print_fatal_error(*c));
 	}
-	else
-	{
-		c->e.no = SYS_ERROR;
-		print_fatal_error(*c);
-	}
+	if (parse_cipher_options(c, data, len, i) < 0)
+		return (print_fatal_error(*c));
+	if (OPTION_ON(_I_CIPHER, c->options) && init_file(c, cipher, IN_FILE) < 0)
+		return (print_fatal_error(*c));
+	if (OPTION_ON(_O_CIPHER, c->options) && init_file(c, cipher, OUT_FILE) < 0)
+		return (print_fatal_error(*c));
+	if (parse_cipher_password(c, cipher) < 0)
+		return (print_fatal_error(*c));
+	c->data = cipher;
+	return ((c->e.no = 1));
 }

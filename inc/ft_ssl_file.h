@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   random.c                                           :+:      :+:    :+:   */
+/*   ft_ssl_file.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/22 22:08:25 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 22:10:02 by pheilbro         ###   ########.fr       */
+/*   Created: 2019/11/22 21:25:05 by pheilbro          #+#    #+#             */
+/*   Updated: 2019/11/22 21:27:22 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include "ft_ssl.h"
-#include "read_data.h"
+#ifndef FT_SSL_FILE
+# define FT_SSL_FILE
 
-char	*nrandom(size_t n)
+# include <stdint.h>
+# include "ft_error.h"
+
+typedef struct	s_ssl_file
 {
-	char	*ret;
-	int		fd;
+	int			fd;
+	char		*reference;
+	char		*data;
+	uint8_t		flag;
+	t_error		e;
+}				t_ssl_file;
 
-	if (!(fd = open("/dev/urandom", O_RDONLY)))
-		return (NULL);
-	if (!(ret = malloc(sizeof(*ret) * (n + 1))))
-		return (NULL);
-	if (ft_ssl_read(fd, ret, n) > 0)
-		return (ret);
-	free(ret);
-	return (NULL);
-}
+t_ssl_file		*init_ssl_file(void);
+int				clean_ssl_file(t_ssl_file *file);
+
+#endif

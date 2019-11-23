@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/25 19:11:06 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 13:58:51 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 21:06:33 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ft_ssl.h"
 
 # define OPTION_ON(spec, generic) (((spec) & (generic)) == (spec))
+# define OPTION_OFF(spec, generic) (((spec) & (generic)) != (spec))
 
 # define _S_MD 1UL
 

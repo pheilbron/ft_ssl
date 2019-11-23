@@ -6,13 +6,14 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 13:44:22 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 22:16:02 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdint.h>
 #include <stdlib.h>
 #include "ft_ssl.h"
+
 #include "ft_ssl_cipher.h"
 #include "ft_ssl_des.h"
 #include "ft_ssl_utils.h"
@@ -90,10 +91,19 @@ uint8_t	g_subkey_permutation_tab2[] = {
 
 int	init_des_context(t_des_context *des, t_cipher_context *c)
 {
+	int	i;
+	
 	if (!(des->out = ft_dstr_init()))
 		return (0);
 	if (!(c->salt))
-		//generate salt
+		c->salt = nrandom(8);
+	i = 0;
+	while (i < 3)
+	{
+		if (!(des->key[i] = malloc(sizeof(*(des->key[i])) * 2)))
+			return (0);
+		i++;
+	}
 	if (ft_ssl_des_pbkdf(c->password, c->salt, &(des->key),
 				&(des->init_vector)) < 0)
 		return (0);
