@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 12:20:09 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 16:38:52 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 16:53:42 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,26 +111,26 @@ static int	init_out_file(t_ssl_context *c)
 	return (c->e.no = SYS_ERROR);
 }
 
-static int	parse_cipher_stdin(t_ssl_context *c)
-{
-	t_ssl_file	*file;
-	t_dstring	*s;
-	char		read_buf[READ_BUF_SIZE];
-	int			size;
-
-	if (!(s = ft_dstr_init()))
-		return (c->e.no = SYS_ERROR);
-	if (!(file = malloc(sizeof(*file))))
-		return (c->e.no = SYS_ERROR);
-	while ((size = read(0, read_buf, READ_BUF_SIZE)) > 0)
-		ft_dstr_add(s, read_buf, size);
-	file->fd = 0;
-	file->reference = ft_dstr_release(s);
-	file->data = file->reference;
-	file->e.no = 1;
-	((t_cipher_context *)(c->data))->in_file = file;
-	return (file->e.no);
-}
+//static int	parse_cipher_stdin(t_ssl_context *c)
+//{
+//	t_ssl_file	*file;
+//	t_dstring	*s;
+//	char		read_buf[READ_BUF_SIZE];
+//	int			size;
+//
+//	if (!(s = ft_dstr_init()))
+//		return (c->e.no = SYS_ERROR);
+//	if (!(file = malloc(sizeof(*file))))
+//		return (c->e.no = SYS_ERROR);
+//	while ((size = read(0, read_buf, READ_BUF_SIZE)) > 0)
+//		ft_dstr_add(s, read_buf, size);
+//	file->fd = 0;
+//	file->reference = ft_dstr_release(s);
+//	file->data = file->reference;
+//	file->e.no = 1;
+//	((t_cipher_context *)(c->data))->in_file = file;
+//	return (file->e.no);
+//}
 
 int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
 {

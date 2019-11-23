@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/17 14:25:46 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 15:24:18 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/22 17:02:58 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int			init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	short	i;
 
 	block->size = hash_size;
-	if (type == MD_FILE && 
+	if (type == MD_FILE &&
 			!(block->data = malloc(sizeof(*(block->data)) * block->size)))
 		return (0);
 	block->bit_len_size = bit_len_size / 32;
@@ -35,7 +35,7 @@ int			init_u32_md_block(t_u32_md_block *block, uint8_t hash_size,
 	i = 0;
 	while (i < block->bit_len_size)
 		block->bit_len[i++] = 0;
-	block->padding = hash_size * 32 * -2;
+	block->padding = (hash_size * 32 * -2) + bit_len_size;
 	return (1);
 }
 
@@ -45,7 +45,8 @@ static void	u32_increment(uint32_t **bit_len, uint8_t bit_len_size,
 	uint8_t	i;
 
 	i = 0;
-	while (i < bit_len_size && (uint32_t)((*bit_len)[i] + size * 8) < (size * 8))
+	while (i < bit_len_size &&
+			(uint32_t)((*bit_len)[i] + size * 8) < (size * 8))
 		i++;
 	if (i >= bit_len_size)
 		i--;
@@ -69,26 +70,20 @@ static int	u32_pad(t_u32_md_block **data, uint8_t type, int size_set)
 		(*data)->data[i] = 0;
 	if ((*data)->padding < 0)
 	{
-		(*data)->padding = (((*data)->padding + (size_set * 8) +
-					((size_set * 8 + 8) % 32) +
-					(*data)->bit_len_size * 32 + 8) * -1) % ((*data)->size * 32);
+		(*data)->padding = (((*data)->padding + (size_set * 8) + 8 +
+					((size_set * 8 + 8) % 32)) * -1) % ((*data)->size * 32);
 		(*data)->data[i++] += (type == LE ? U32_LE_PAD_ONE(size_set) :
 				U32_BE_PAD_ONE(size_set));
 		(*data)->padding -= ((*data)->padding % 32);
 	}
 	while (i < (*data)->size && (*data)->padding > 0)
 	{
-		(*data)->data[i] = 0;
-		i++;
+		(*data)->data[i++] = 0;
 		(*data)->padding -= 32;
 	}
 	while (i < (*data)->size)
-	{
-		(*data)->data[i] = (*data)->bit_len[type == LITTLE_END ? j :
-			(*data)->bit_len_size - j - 1];
-		i++;
-		j++;
-	}
+		(*data)->data[i++] = (*data)->bit_len[type == LITTLE_END ? j++ :
+			(*data)->bit_len_size - j++ - 1];
 	return (i);
 }
 
