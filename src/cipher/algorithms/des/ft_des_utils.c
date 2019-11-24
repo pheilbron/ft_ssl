@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 22:16:02 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/11/23 09:54:15 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,6 @@ int	init_des_context(t_des_context *des, t_cipher_context *c)
 	if (!(c->salt))
 		c->salt = nrandom(8);
 	i = 0;
-	while (i < 3)
-	{
-		if (!(des->key[i] = malloc(sizeof(*(des->key[i])) * 2)))
-			return (0);
-		i++;
-	}
 	if (ft_ssl_des_pbkdf(c->password, c->salt, &(des->key),
 				&(des->init_vector)) < 0)
 		return (0);
