@@ -21,4 +21,3 @@ typedef struct	s_bignum_mini
 
 typedef struct	t_bignum
 {
-	t_vector	*
