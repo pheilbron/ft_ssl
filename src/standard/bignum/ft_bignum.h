@@ -13,6 +13,12 @@ typedef struct	s_bignum
 	uint64_t	overflow;
 }				t_bignum;
 
+typedef struct	s_bignum_mini
+{
+	uint64_t	n;
+	uint64_t	overflow;
+}				t_bignum_mini;
+
 t_bignum	*ft_bn_from_int(t_bignum *result, int nbr);
 t_bignum	*ft_bn_from_string(t_bignum *result, char *nbr);
 

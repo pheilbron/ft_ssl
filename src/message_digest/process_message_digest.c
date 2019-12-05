@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 13:41:29 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 19:40:42 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/12/04 14:18:04 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	process_message_digest(t_ssl_context *c)
 	while (!ft_queue_is_empty(c->data))
 	{
 		file = (t_ssl_file *)(ft_queue_dequeue(c->data));
+		if (file->fd > 0 && open_ssl_file(file))
+			(*(c->algorithm.f))(file, &hash, MD_FILE);
+		else if (file->fd == 0)
+			(*(c->algorithm.f))(file->reference, &hash, MD_BUFFER);
 		if (file->e.no >= 0)
 		{
-			if (file->fd > 0)
-				(*(c->algorithm.f))(file, &hash, MD_FILE);
-			else
-				(*(c->algorithm.f))(file->reference, &hash, MD_BUFFER);
 			ft_ssl_md_print(file, hash, c);
 			free(hash);
 		}

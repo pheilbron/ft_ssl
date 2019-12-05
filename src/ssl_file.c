@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 21:19:30 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/22 21:33:32 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/12/04 14:18:09 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,11 @@ int			clean_ssl_file(t_ssl_file *file)
 		free(file->data);
 	free(file);
 	return (1);
+}
+
+int			open_ssl_file(t_ssl_file *file)
+{
+	if ((file->fd = open(file->reference, O_RDONLY)) < 0)
+		ft_error_new(&(file->e), 2, INV_FILE, file->reference);
+	return (file->e.no);
 }
