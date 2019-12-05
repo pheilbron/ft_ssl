@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/20 12:59:54 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/20 13:22:58 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/12/04 19:19:59 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,19 @@ void	(*get_des_block_decryptor(uint16_t flag))(t_des_context *)
 int	ft_ssl_des(void *data, char **out, uint16_t flag)
 {
 	t_cipher_context	*c;
-	t_des_context		des;
+	t_des_context		*des;
 	int					status;
 	void				(*f)(t_des_context *);
 
 	c = (t_cipher_context *)data;
 	if (!(f = get_des_block_encryptor(flag)))
 		return (c->e.no = INV_BLOCK_CIPHER_MODE);
-	if (!init_des_context(&des, c))
+	if (!(des = init_des_context(c)))
 		return ((c->e.no = SYS_ERROR));
-	while ((status = set_u64_block(&(des.block), c->in_file->fd, &pad_pkcs7)))
-		(*f)(&des);
+	while ((status = set_u64_block(&(des->block), c->in_file->fd, &pad_pkcs7)))
+		(*f)(des);
 	c->e.no = status != DONE ? SYS_ERROR : 1;
-	(*out) = ft_dstr_release(des.out);
+	(*out) = ft_dstr_release(des->out);
 	return (c->e.no);
 }
 

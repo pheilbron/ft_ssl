@@ -6,7 +6,7 @@
 /*   By: pheilbro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/10 13:23:28 by pheilbro          #+#    #+#             */
-/*   Updated: 2019/11/23 09:54:15 by pheilbro         ###   ########.fr       */
+/*   Updated: 2019/12/04 19:00:07 by pheilbro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,21 +89,6 @@ uint8_t	g_subkey_permutation_tab2[] = {
 	44, 49, 39, 56, 34, 53,
 	46, 42, 50, 36, 29, 32};
 
-int	init_des_context(t_des_context *des, t_cipher_context *c)
-{
-	int	i;
-	
-	if (!(des->out = ft_dstr_init()))
-		return (0);
-	if (!(c->salt))
-		c->salt = nrandom(8);
-	i = 0;
-	if (ft_ssl_des_pbkdf(c->password, c->salt, &(des->key),
-				&(des->init_vector)) < 0)
-		return (0);
-	return (1);
-}
-
 void	setup_block(t_des_context *c, int pos, int len, char *s)
 {
 	c->block = 0;
@@ -165,61 +150,4 @@ void	feistel_process(t_des_context *c, int round)
 	c->block = c->left ^ (out >> 32);
 	c->left = c->right;
 	c->right = c->block;
-}
-
-uint64_t	permute_subkey(uint64_t key)
-{
-	uint64_t	out;
-	int			i;
-
-	i = 0;
-	out = 0;
-	key <<= 8;
-	while (i < 48)
-	{
-		out |= ((key >> (64 - g_subkey_permutation_tab2[i])) & 1)
-			<< (63 - i);
-		i++;
-	}
-	return (out >> 16);
-}
-
-void	init_subkey_tab(t_des_context *c)
-{
-	uint64_t	out;
-	uint64_t	temp_tab[2][17];
-	int			i;
-
-	i = 0;
-	out = 0;
-	while (i < 56)
-	{
-		out |= ((c->key[0] >> (64 - g_subkey_permutation_tab1[i])) & 1)
-			<< (63 - i);
-		i++;
-	}
-	c->key[0] = out >> 8;
-	temp_tab[0][0] = (c->key[0] & 0xfffffff0000000UL) >> 28;
-	temp_tab[1][0] = c->key[0] & 0xfffffffUL;
-	i = 1;
-	while (i < 17)
-	{
-		temp_tab[0][i] = safe_rot_l(temp_tab[0][i - 1],
-				(i == 1 || i == 2 || i == 9 || i == 16 ? 1 : 2), 28);
-		temp_tab[1][i] = safe_rot_l(temp_tab[1][i - 1],
-				(i == 1 || i == 2 || i == 9 || i == 16 ? 1 : 2), 28);
-		i++;
-	}
-	i = 1;
-	while (i < 17)
-	{
-		temp_tab[0][i - 1] = ((temp_tab[0][i] << 28) | temp_tab[1][i]);
-		i++;
-	}
-	i = 0;
-	while (i < 16)
-	{
-		c->sub_key[i] = permute_subkey(temp_tab[0][i]);
-		i++;
-	}
 }
