@@ -43,8 +43,7 @@ static int	set_context(t_ssl_context *c, uint16_t op, char **data, int *i)
 		else
 			return (1);
 	}
-	c->e.data = data[0];
-	return ((c->e.no = MISSING_ARG));
+	return (ft_error_new(&(c->e), 2, MISSING_ARG, data[0]));
 }
 
 static int	parse_cipher_options(t_ssl_context *c, char **data, int len, int *i)
@@ -85,82 +84,21 @@ static int	init_file(t_ssl_context *c, t_cipher_context *cipher, uint8_t type)
 	if (stat(file->reference, &entry) == 0)
 	{
 		if (S_ISDIR(entry.st_mode))
-			return (ft_ssl_new_error(&(c->e), type == IN_FILE ?
+			return (ft_error_new(&(c->e), 2, type == IN_FILE ?
 						INV_DIR : INV_DIR_CREATE, file->reference));
 		if ((type == IN_FILE) && (S_IRUSR & entry.st_mode) != S_IRUSR)
-			return (ft_ssl_new_error(&(c->e), INV_FILE_OPEN, file->reference));
+			return (ft_error_new(&(c->e), 2, INV_FILE_OPEN, file->reference));
 		if ((type == IN_FILE) &&
 				(file->fd = open(file->reference, O_RDONLY)) < 0)
-			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
+			return (ft_error_new(&(c->e), 2, INV_FILE, file->reference));
 		if ((type != IN_FILE) && (S_IWUSR & entry.st_mode) != S_IWUSR)
-			return (ft_ssl_new_error(&(c->e), INV_FILE_CREATE, file->reference));
+			return (ft_error_new(&(c->e), 2, INV_FILE_CREATE, file->reference));
 		if ((type != IN_FILE) && (file->fd =
 					open(file->reference, O_CREAT | O_WRONLY, 0644)) < 0)
-			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
+			return (ft_error_new(&(c->e), 2, INV_FILE, file->reference));
 	}
 	return (c->e.no = SYS_ERROR);
 }
-
-//static int	init_in_file(t_ssl_context *c)
-//{
-//	t_ssl_file	*file;
-//	struct stat	entry;
-//
-//	file = ((t_cipher_context *)(c->data))->in_file;
-//	if (*(file->reference) == '-')
-//		file->fd = 0;
-//	if (stat(file->reference, &entry) == 0)
-//	{
-//		if (S_ISDIR(entry.st_mode))
-//			return (ft_ssl_new_error(&(c->e), INV_DIR, file->reference));
-//		if ((S_IRUSR & entry.st_mode) != S_IRUSR)
-//			return (ft_ssl_new_error(&(c->e), INV_FILE_OPEN, file->reference));
-//		if ((file->fd = open(file->reference, O_RDONLY)) < 0)
-//			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
-//	}
-//	return (c->e.no = SYS_ERROR);
-//}
-//
-//static int	init_out_file(t_ssl_context *c)
-//{
-//	t_ssl_file	*file;
-//	struct stat	entry;
-//
-//	file = ((t_cipher_context *)(c->data))->out_file;
-//	if (*(file->reference) == '-')
-//		file->fd = 1;
-//	if (stat(file->reference, &entry) == 0)
-//	{
-//		if (S_ISDIR(entry.st_mode))
-//			return (ft_ssl_new_error(&(c->e), INV_DIR_CREATE, file->reference));
-//		if ((S_IWUSR & entry.st_mode) != S_IWUSR)
-//			return (ft_ssl_new_error(&(c->e), INV_FILE_CREATE, file->reference));
-//		if ((file->fd = open(file->reference, O_CREAT | O_WRONLY, 0644)) < 0)
-//			return (ft_ssl_new_error(&(c->e), INV_FILE, file->reference));
-//	}
-//	return (c->e.no = SYS_ERROR);
-//}
-
-//static int	parse_cipher_stdin(t_ssl_context *c)
-//{
-//	t_ssl_file	*file;
-//	t_dstring	*s;
-//	char		read_buf[READ_BUF_SIZE];
-//	int			size;
-//
-//	if (!(s = ft_dstr_init()))
-//		return (c->e.no = SYS_ERROR);
-//	if (!(file = malloc(sizeof(*file))))
-//		return (c->e.no = SYS_ERROR);
-//	while ((size = read(0, read_buf, READ_BUF_SIZE)) > 0)
-//		ft_dstr_add(s, read_buf, size);
-//	file->fd = 0;
-//	file->reference = ft_dstr_release(s);
-//	file->data = file->reference;
-//	file->e.no = 1;
-//	((t_cipher_context *)(c->data))->in_file = file;
-//	return (file->e.no);
-//}
 
 static int	parse_cipher_password(t_ssl_context *c, t_cipher_context *cipher)
 {

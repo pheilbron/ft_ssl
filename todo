@@ -4,3 +4,10 @@
 - clean up the error and cleaning sections
 - fix print for md
 - fix clean for files, and md_blocks
+
+
+
+CIPHER:
+
+save file names into file structs
+in process, actually try and open/create files + print right away on error.

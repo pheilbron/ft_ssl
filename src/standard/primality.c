@@ -38,3 +38,32 @@ int	ft_ssl_u64_is_prime(uint64_t n, float probability)
 	free_milrab_context(c);
 	return (1);
 }
+
+int	is_prime(uint64_t n, float probability)
+{
+	float		prob;
+	uint64_t	a;
+	uint64_t	x;
+	uint64_t	i;
+	uint64_t	r;
+	uint64_t	d;
+
+	prob = 1.0;
+	while (prob > 1 - probability)
+	{
+		a = get_rand(2, n - 2);
+		x = ft_pow(a, d) % n;
+		if (x == 1 || x == n - 1)
+			return (0);
+		i = 0;
+		while (i < (r - 1))
+		{
+			x = ft_pow(x, 2) % n;
+			if (x != n - 1)
+				return (0);
+			i++;
+		}
+		prob *= 0.25;
+	}
+	return (1);
+}

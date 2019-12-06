@@ -73,9 +73,6 @@ int				print_fatal_error(t_ssl_context c);
 void			print_non_fatal_error(t_ssl_file *file, char *algorithm_name);
 void			set_ssl_error(t_ssl_file *file, char *algorithm_name,
 		t_error e);
-void			ft_ssl_error_init(t_error *e);
-void			init_ssl_error(t_error *e);
 int				ft_ssl_free_error(t_error *e);
-int				ft_ssl_new_error(t_error *e, int no, char *data);
 
 #endif

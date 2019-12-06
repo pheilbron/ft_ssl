@@ -80,22 +80,3 @@ void		print_non_fatal_error(t_ssl_file *file, char *algorithm_name)
 		ft_printf("%s\n", s->buf);
 	ft_dstr_free(s);
 }
-
-void		init_ssl_error(t_error *e)
-{
-	e->no = 0;
-	e->data = NULL;
-}
-
-void		ft_ssl_error_init(t_error *e)
-{
-	e->no = 0;
-	e->data = NULL;
-}
-
-int			ft_ssl_new_error(t_error *e, int no, char *data)
-{
-	e->no = no;
-	e->data = data;
-	return (no);
-}

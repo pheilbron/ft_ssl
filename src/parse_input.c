@@ -15,6 +15,7 @@
 #include "ft_ssl_options.h"
 #include "ft_ssl_message_digest.h"
 #include "ft_ssl_cipher.h"
+#include "ft_error.h"
 #include "ft_string.h"
 
 t_ssl_algorithm	g_algo_tab[] =
@@ -86,8 +87,8 @@ static int	parse_ssl_command(t_ssl_context *c, char *command)
 		i++;
 	}
 	c->algorithm.type = (t_ssl_algorithm_type){0, 0, 0};
-	c->e.data = command;
-	return (c->e.no = INV_COMMAND);
+	ft_error_new(&(c->e), 2, INV_COMMAND, command);
+	return (c->e.no);
 }
 
 int			parse_input(t_ssl_context *c, char **data, int len)
@@ -97,7 +98,7 @@ int			parse_input(t_ssl_context *c, char **data, int len)
 	i = 0;
 	if (len == 0)
 		return (print_usage(*c));
-	ft_ssl_error_init(&(c->e));
+	ft_error_new(&(c->e), 0);
 	if (parse_ssl_command(c, data[i++]) < 0)
 		print_fatal_error(*c);
 	else if (c->algorithm.type.family == MD)

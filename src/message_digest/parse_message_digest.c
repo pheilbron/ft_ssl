@@ -47,16 +47,8 @@ static int	parse_md_file(t_ssl_context *c, char **data, int i)
 
 	if (!(file = malloc(sizeof(*file))))
 		return (c->e.no = SYS_ERROR);
-	if ((file->fd = open(data[i], O_DIRECTORY)) >= 0)
-	{
-		close(file->fd);
-		ft_ssl_new_error(&(file->e), INV_DIR, data[i]);
-	}
-	else
-	{
-		file->reference = data[i];
-		file->e.no = 1;
-	}
+	file->reference = data[i];
+	file->e.no = 1;
 	file->flag = c->options & ~_P_MD & ~_S_MD;
 	ft_queue_enqueue(c->data, file);
 	return (file->e.no);
